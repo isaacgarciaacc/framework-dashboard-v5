@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Framework v5.0 - Proyectos Tiempo Real</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 255, 0, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin-bottom: 10px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .last-update {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .metric-value.success {
+            color: #00ff88;
+        }
+
+        .metric-value.warning {
+            color: #ffaa00;
+        }
+
+        .metric-value.danger {
+            color: #ff4444;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #00ff88, #00cc66);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .alerts-section {
+            background: rgba(255, 68, 68, 0.2);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-icon {
+            color: #ff4444;
+            font-size: 1.2rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(45deg, #00ff88, #00cc66);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Dashboard Framework v5.0</h1>
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>Sistema Operacional</span>
+                </div>
+                <div class="status-item">
+                    <span>ROI: 3,000%+</span>
+                </div>
+                <div class="status-item">
+                    <span>Eficiencia: 99.5%</span>
+                </div>
+                <div class="last-update" id="lastUpdate">
+                    Última actualización: <span id="updateTime">--:--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertas Críticas -->
+        <div class="alerts-section">
+            <h3>🚨 Alertas Críticas</h3>
+            <div class="alert-item">
+                <span class="alert-icon">⚖️</span>
+                <div>
+                    <strong>Litigio Custodia:</strong> Próxima audiencia en 14 días
+                </div>
+            </div>
+            <div class="alert-item">
+                <span class="alert-icon">💳</span>
+                <div>
+                    <strong>Pago Tarjeta:</strong> Vence en 3 días
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Trabajo FedEx -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">💼</span>
+                        Trabajo FedEx
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>Productividad Score</span>
+                    <span class="metric-value success">92%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92%"></div>
+                </div>
+                <div class="metric">
+                    <span>Horas Logged</span>
+                    <span class="metric-value">42h/semana</span>
+                </div>
+                <div class="metric">
+                    <span>Proyectos Activos</span>
+                    <span class="metric-value">3</span>
+                </div>
+                <div class="metric">
+                    <span>Next Deadline</span>
+                    <span class="metric-value warning">2 días</span>
+                </div>
+            </div>
+
+            <!-- Agenda Personal -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">📅</span>
+                        Agenda Personal
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>Compliance Rate</span>
+                    <span class="metric-value success">95%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 95%"></div>
+                </div>
+                <div class="metric">
+                    <span>Eventos Próximos</span>
+                    <span class="metric-value">8</span>
+                </div>
+                <div class="metric">
+                    <span>Automatización</span>
+                    <span class="metric-value success">78%</span>
+                </div>
+                <div class="metric">
+                    <span>Próximo Crítico</span>
+                    <span class="metric-value danger">Audiencia Legal</span>
+                </div>
+            </div>
+
+            <!-- Negocio Personal -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">📈</span>
+                        Negocio Personal
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>Revenue Pipeline</span>
+                    <span class="metric-value success">$12,500</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 68%"></div>
+                </div>
+                <div class="metric">
+                    <span>Clientes Activos</span>
+                    <span class="metric-value">7</span>
+                </div>
+                <div class="metric">
+                    <span>Meetings Esta Semana</span>
+                    <span class="metric-value">4</span>
+                </div>
+                <div class="metric">
+                    <span>Growth Rate</span>
+                    <span class="metric-value success">+23%</span>
+                </div>
+            </div>
+
+            <!-- Framework Core -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">🧠</span>
+                        Framework Core
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>System Health</span>
+                    <span class="metric-value success">100%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <div class="metric">
+                    <span>Token Efficiency</span>
+                    <span class="metric-value success">99.5%</span>
+                </div>
+                <div class="metric">
+                    <span>Conversations/Day</span>
+                    <span class="metric-value">20+</span>
+                </div>
+                <div class="metric">
+                    <span>Uptime</span>
+                    <span class="metric-value success">99.9%</span>
+                </div>
+            </div>
+
+            <!-- ROI General -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">💎</span>
+                        ROI General
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>Overall Improvement</span>
+                    <span class="metric-value success">3,000%+</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <div class="metric">
+                    <span>Time Saved/Week</span>
+                    <span class="metric-value success">15h</span>
+                </div>
+                <div class="metric">
+                    <span>Automation Success</span>
+                    <span class="metric-value success">89%</span>
+                </div>
+                <div class="metric">
+                    <span>Framework ROI</span>
+                    <span class="metric-value success">466%+</span>
+                </div>
+            </div>
+
+            <!-- Proyectos Status -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">📊</span>
+                        Proyectos Status
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>Framework Revolution</span>
+                    <span class="metric-value success">✅ COMPLETADO</span>
+                </div>
+                <div class="metric">
+                    <span>Agenda Personal</span>
+                    <span class="metric-value warning">🔄 INICIADO</span>
+                </div>
+                <div class="metric">
+                    <span>Finanzas Management</span>
+                    <span class="metric-value">📋 PIPELINE</span>
+                </div>
+                <div class="metric">
+                    <span>Legal Tracking</span>
+                    <span class="metric-value">📋 PIPELINE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>URL Dashboard:</strong> https://isaacgarciaacc.github.io/framework-dashboard-v5/</p>
+            <p><strong>GitHub:</strong> https://github.com/isaacgarciaacc/framework-dashboard-v5</p>
+            <button class="refresh-btn" onclick="refreshDashboard()">🔄 Actualizar Datos</button>
+            <p style="margin-top: 15px; opacity: 0.8;">
+                Dashboard Framework v5.0 - Tiempo Real | Auto-refresh cada 5 minutos
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Actualización tiempo real
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('updateTime').textContent = 
+                now.toLocaleTimeString('es-ES', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+        }
+
+        // Simular actualización de datos
+        function refreshDashboard() {
+            // Animación de refresh
+            const btn = document.querySelector('.refresh-btn');
+            btn.style.transform = 'rotate(360deg)';
+            btn.textContent = '🔄 Actualizando...';
+            
+            setTimeout(() => {
+                btn.style.transform = 'rotate(0deg)';
+                btn.textContent = '🔄 Actualizar Datos';
+                updateTime();
+                
+                // Simular cambios en métricas
+                const values = document.querySelectorAll('.metric-value');
+                values.forEach(value => {
+                    if (value.textContent.includes('%')) {
+                        const currentValue = parseInt(value.textContent);
+                        const newValue = Math.max(85, Math.min(100, currentValue + (Math.random() * 4 - 2)));
+                        value.textContent = Math.round(newValue) + '%';
+                    }
+                });
+            }, 2000);
+        }
+
+        // Auto-refresh cada 5 minutos
+        setInterval(refreshDashboard, 300000);
+        
+        // Actualizar tiempo cada segundo
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Inicialización
+        console.log('Dashboard Framework v5.0 inicializado');
+        console.log('APIs disponibles: Google Calendar, Gmail, Supabase, GitHub');
+        console.log('Siguiente actualización automática en 5 minutos');
+    </script>
+</body>
+</html>
