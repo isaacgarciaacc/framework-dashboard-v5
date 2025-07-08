@@ -108,6 +108,11 @@
             font-size: 0.9em;
         }
 
+        .status-badge.critical {
+            background: #FF9800;
+            animation: pulse 2s infinite;
+        }
+
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -431,17 +436,21 @@
         <!-- Microsoft 365 Migration Project Section -->
         <div class="m365-migration" id="m365-migration">
             <div class="section-header">
-                <h2>🚀 Framework v5.0 Microsoft 365 Migration</h2>
-                <div class="status-badge active">FASE 1 - EN PROGRESO</div>
+                <h2>🚀 Microsoft ToDo Migration Project v5.0</h2>
+                <div class="status-badge critical">AUTENTICACIÓN REQUERIDA</div>
             </div>
             
             <div class="migration-overview">
                 <div class="project-info">
-                    <h3>📊 Project Overview</h3>
+                    <h3>📊 Project Overview - Microsoft ToDo Zapier → M365 MCP</h3>
                     <div class="info-grid">
                         <div class="info-item">
                             <span class="label">Objetivo:</span>
-                            <span class="value">Reajustar Framework v5.0 a funcionalidad base con M365 MCP</span>
+                            <span class="value">Sustituir Microsoft ToDo Zapier (rate limited) con M365 MCP directo</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Problem:</span>
+                            <span class="value">Rate limiting 5 req/min Zapier FREE eliminado completamente</span>
                         </div>
                         <div class="info-item">
                             <span class="label">Arquitectura:</span>
@@ -449,7 +458,11 @@
                         </div>
                         <div class="info-item">
                             <span class="label">Timeline:</span>
-                            <span class="value">21 días (07 Ene - 28 Ene 2025)</span>
+                            <span class="value">7 días (07 Ene - 14 Ene 2025)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Scope:</span>
+                            <span class="value">Task management + Lista management + Automation sin límites</span>
                         </div>
                         <div class="info-item">
                             <span class="label">Checkpoint:</span>
@@ -460,26 +473,26 @@
             </div>
 
             <div class="progress-timeline">
-                <h3>📅 Implementation Timeline</h3>
+                <h3>📅 Implementation Timeline - Microsoft ToDo Integration</h3>
                 <div class="timeline">
                     <div class="phase active">
                         <div class="phase-header">
                             <span class="phase-number">1</span>
-                            <span class="phase-title">Configuración Base M365 MCP</span>
-                            <span class="phase-duration">Días 1-3</span>
+                            <span class="phase-title">Microsoft ToDo MCP Setup</span>
+                            <span class="phase-duration">Días 1-2</span>
                         </div>
                         <div class="phase-tasks">
                             <div class="task in-progress">
                                 <span class="task-id">TASK_1.1</span>
-                                <span class="task-name">Mapear funcionalidades Framework vs M365</span>
+                                <span class="task-name">Microsoft 365 Authentication & Login</span>
                                 <div class="progress-bar-m365">
-                                    <div class="progress-fill-m365" style="width: 25%"></div>
+                                    <div class="progress-fill-m365" style="width: 0%"></div>
                                 </div>
-                                <span class="progress-text">25%</span>
+                                <span class="progress-text">0%</span>
                             </div>
                             <div class="task pending">
                                 <span class="task-id">TASK_1.2</span>
-                                <span class="task-name">Configurar autenticación Graph API</span>
+                                <span class="task-name">Microsoft ToDo API access verification</span>
                                 <div class="progress-bar-m365">
                                     <div class="progress-fill-m365" style="width: 0%"></div>
                                 </div>
@@ -487,7 +500,7 @@
                             </div>
                             <div class="task pending">
                                 <span class="task-id">TASK_1.3</span>
-                                <span class="task-name">Verificar conectividad M365</span>
+                                <span class="task-name">Framework integration testing</span>
                                 <div class="progress-bar-m365">
                                     <div class="progress-fill-m365" style="width: 0%"></div>
                                 </div>
@@ -499,62 +512,62 @@
                     <div class="phase upcoming">
                         <div class="phase-header">
                             <span class="phase-number">2</span>
-                            <span class="phase-title">Adaptación Smart Triggers v5.0</span>
-                            <span class="phase-duration">Días 4-7</span>
+                            <span class="phase-title">Zapier Workflows Migration</span>
+                            <span class="phase-duration">Días 3-4</span>
                         </div>
                     </div>
 
                     <div class="phase upcoming">
                         <div class="phase-header">
                             <span class="phase-number">3</span>
-                            <span class="phase-title">Migración Workflows Críticos</span>
-                            <span class="phase-duration">Días 8-14</span>
+                            <span class="phase-title">Smart Triggers Implementation</span>
+                            <span class="phase-duration">Días 5-6</span>
                         </div>
                     </div>
 
                     <div class="phase upcoming">
                         <div class="phase-header">
                             <span class="phase-number">4</span>
-                            <span class="phase-title">Integración Framework v5.0</span>
-                            <span class="phase-duration">Días 15-21</span>
+                            <span class="phase-title">Testing & Framework v5.0 Integration</span>
+                            <span class="phase-duration">Día 7</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="current-focus">
-                <h3>🎯 Current Focus</h3>
+                <h3>🎯 Current Focus - Microsoft ToDo Authentication</h3>
                 <div class="focus-card">
                     <div class="focus-header">
-                        <span class="focus-title">TASK_1.1 - Mapeo Funcionalidades</span>
-                        <span class="focus-status in-progress">EN PROGRESO</span>
+                        <span class="focus-title">TASK_1.1 - Microsoft 365 Login Required</span>
+                        <span class="focus-status in-progress">BLOQUEADO</span>
                     </div>
                     <div class="focus-details">
-                        <p><strong>Descripción:</strong> Inventory funcionalidades Framework Revolution + M365 equivalents</p>
-                        <p><strong>Progreso:</strong> 25% - Inventario Framework completado parcialmente</p>
-                        <p><strong>Due Date:</strong> 08 Enero 2025</p>
-                        <p><strong>Next Step:</strong> Completar mapeo M365 tools disponibles</p>
-                        <p><strong>Estimated Time:</strong> 4-6 horas restantes</p>
+                        <p><strong>Descripción:</strong> Autenticación Microsoft 365 MCP requerida para acceso Microsoft ToDo</p>
+                        <p><strong>Issue:</strong> No valid token found - Login required</p>
+                        <p><strong>Próximo paso:</strong> Usuario debe ejecutar login Microsoft 365</p>
+                        <p><strong>Comando:</strong> microsoft-365:login para iniciar autenticación</p>
+                        <p><strong>Documentado:</strong> Rate limiting 5 req/min Zapier confirmado en Framework</p>
                     </div>
                 </div>
             </div>
 
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-value-m365">25%</div>
-                    <div class="metric-label">FASE 1 Progress</div>
+                    <div class="metric-value-m365">0%</div>
+                    <div class="metric-label">Authentication</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value-m365">3</div>
-                    <div class="metric-label">Days Remaining Phase 1</div>
+                    <div class="metric-value-m365">5</div>
+                    <div class="metric-label">Req/Min Eliminated</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value-m365">95%</div>
-                    <div class="metric-label">Target Compatibility</div>
+                    <div class="metric-value-m365">7</div>
+                    <div class="metric-label">Days Timeline</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value-m365">+400%</div>
-                    <div class="metric-label">ROI Potential</div>
+                    <div class="metric-value-m365">100%</div>
+                    <div class="metric-label">Rate Limit Elimination</div>
                 </div>
             </div>
         </div>
@@ -562,6 +575,12 @@
         <!-- Alertas Críticas -->
         <div class="alerts-section">
             <h3>🚨 Alertas Críticas</h3>
+            <div class="alert-item">
+                <span class="alert-icon">🔐</span>
+                <div>
+                    <strong>Microsoft 365 Login:</strong> Autenticación requerida para continuar Microsoft ToDo migration
+                </div>
+            </div>
             <div class="alert-item">
                 <span class="alert-icon">⚖️</span>
                 <div>
@@ -735,8 +754,8 @@
                     <span class="metric-value success">✅ COMPLETADO</span>
                 </div>
                 <div class="metric">
-                    <span>M365 Migration</span>
-                    <span class="metric-value warning">🔄 FASE 1</span>
+                    <span>Microsoft ToDo Migration</span>
+                    <span class="metric-value warning">🔐 LOGIN REQUIRED</span>
                 </div>
                 <div class="metric">
                     <span>Agenda Personal</span>
@@ -754,7 +773,7 @@
             <p><strong>GitHub:</strong> https://github.com/isaacgarciaacc/framework-dashboard-v5</p>
             <button class="refresh-btn" onclick="refreshDashboard()">🔄 Actualizar Datos</button>
             <p style="margin-top: 15px; opacity: 0.8;">
-                Dashboard Framework v5.0 - Tiempo Real | Auto-refresh cada 5 minutos
+                Dashboard Framework v5.0 - Microsoft ToDo Migration | Auto-refresh cada 5 minutos
             </p>
         </div>
     </div>
@@ -804,8 +823,8 @@
 
         // Inicialización
         console.log('Dashboard Framework v5.0 inicializado');
-        console.log('APIs disponibles: Google Calendar, Gmail, Supabase, GitHub, Microsoft 365');
-        console.log('Microsoft 365 Migration Project: FASE 1 - EN PROGRESO');
+        console.log('Microsoft ToDo Migration Project: AUTHENTICATION REQUIRED');
+        console.log('Rate limiting elimination: 5 req/min → 0 limits');
         console.log('Siguiente actualización automática en 5 minutos');
     </script>
 </body>
