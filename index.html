@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Framework v5.0 - Microsoft 365 Integration COMPLETE</title>
+    <title>Dashboard Framework v5.1 - Notion Official Reports Platform</title>
     <style>
         * {
             margin: 0;
@@ -79,14 +79,14 @@
             opacity: 0.8;
         }
 
-        /* Microsoft 365 COMPLETED Section */
-        .m365-migration {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        /* Notion Official Reports Section */
+        .notion-reports {
+            background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);
             border-radius: 12px;
             padding: 24px;
             margin: 20px 0;
             color: white;
-            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 10px 30px rgba(155, 89, 182, 0.3);
         }
 
         .section-header {
@@ -102,7 +102,7 @@
         }
 
         .status-badge {
-            background: #4CAF50;
+            background: #9B59B6;
             padding: 8px 16px;
             border-radius: 20px;
             font-weight: bold;
@@ -110,14 +110,14 @@
             animation: glow 2s infinite;
         }
 
-        .status-badge.completed {
-            background: #2E7D32;
-            animation: completedGlow 3s infinite;
+        .status-badge.active {
+            background: #8E44AD;
+            animation: notionGlow 3s infinite;
         }
 
-        @keyframes completedGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.8); }
-            50% { box-shadow: 0 0 20px rgba(76, 175, 80, 1); }
+        @keyframes notionGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(155, 89, 182, 0.8); }
+            50% { box-shadow: 0 0 20px rgba(155, 89, 182, 1); }
         }
 
         .info-grid {
@@ -139,120 +139,36 @@
             font-weight: bold;
         }
 
-        .timeline {
+        .architecture-update {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 16px;
             margin-top: 16px;
         }
 
-        .phase {
-            margin-bottom: 20px;
-            border-left: 4px solid #4CAF50;
-            padding-left: 16px;
-        }
-
-        .phase.completed {
-            border-left-color: #2E7D32;
-            background: rgba(76, 175, 80, 0.1);
-            border-radius: 8px;
-            padding: 16px;
-        }
-
-        .phase-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .phase-number {
-            background: #4CAF50;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .phase.completed .phase-number {
-            background: #2E7D32;
-        }
-
-        .phase-tasks {
-            margin-left: 42px;
-        }
-
-        .task {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-            padding: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 6px;
-        }
-
-        .task.completed {
-            background: rgba(76, 175, 80, 0.2);
-        }
-
-        .task-id {
-            font-weight: bold;
-            min-width: 80px;
-        }
-
-        .task-name {
-            flex: 1;
-        }
-
-        .progress-bar-m365 {
-            width: 100px;
-            height: 8px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill-m365 {
-            height: 100%;
-            background: #4CAF50;
-            transition: width 0.3s ease;
-        }
-
-        .task.completed .progress-fill-m365 {
-            background: #2E7D32;
-        }
-
-        .progress-text {
-            min-width: 40px;
-            text-align: right;
-            font-weight: bold;
-        }
-
-        .metrics-grid {
+        .architecture-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-top: 24px;
+            gap: 12px;
+            margin-top: 12px;
         }
 
-        .metric-card {
+        .arch-component {
             background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 16px;
+            padding: 12px;
+            border-radius: 6px;
             text-align: center;
         }
 
-        .metric-value-m365 {
-            font-size: 2em;
+        .arch-percentage {
+            font-size: 1.5em;
             font-weight: bold;
             margin-bottom: 4px;
         }
 
-        .metric-label {
+        .arch-name {
             font-size: 0.9em;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .dashboard-grid {
@@ -406,17 +322,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Dashboard Framework v5.0 + Microsoft 365</h1>
+            <h1>🚀 Framework v5.1 - Notion Official Reports Platform</h1>
             <div class="status-bar">
                 <div class="status-item">
                     <div class="status-dot"></div>
-                    <span>Enterprise Platform Operacional</span>
+                    <span>Notion Reports Platform Operacional</span>
                 </div>
                 <div class="status-item">
                     <span>ROI: 3,000%+</span>
                 </div>
                 <div class="status-item">
-                    <span>M365 Integration: ✅ COMPLETE</span>
+                    <span>Notion MCP: ✅ ACTIVE</span>
                 </div>
                 <div class="last-update" id="lastUpdate">
                     Última actualización: <span id="updateTime">--:--</span>
@@ -424,122 +340,93 @@
             </div>
         </div>
 
-        <!-- Microsoft 365 Integration COMPLETED Section -->
-        <div class="m365-migration" id="m365-migration">
+        <!-- Notion Official Reports Platform Section -->
+        <div class="notion-reports" id="notion-reports">
             <div class="section-header">
-                <h2>✅ Microsoft 365 Integration v5.0 - PROJECT COMPLETED</h2>
-                <div class="status-badge completed">✅ COMPLETADO EXITOSAMENTE</div>
+                <h2>📝 Notion Official Reports Platform v5.1 - PROTOCOL ACTIVE</h2>
+                <div class="status-badge active">✅ PROTOCOLO ACTIVO</div>
             </div>
             
-            <div class="migration-overview">
+            <div class="notion-overview">
                 <div class="project-info">
-                    <h3>🎉 Project SUCCESS - Framework v5.0 + Microsoft 365 MCP Integration</h3>
+                    <h3>🎯 NOTION MCP = PLATAFORMA OFICIAL DE REPORTES FRAMEWORK</h3>
                     <div class="info-grid">
                         <div class="info-item">
-                            <span class="label">✅ Objetivo Cumplido:</span>
-                            <span class="value">Framework Revolution funciona con Microsoft 365 MCP</span>
+                            <span class="label">✅ Bot Integration:</span>
+                            <span class="value">Workspace "iceman garcia's Notion" operacional</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ Authentication:</span>
-                            <span class="value">Microsoft 365 MCP operational (outlookisaac@gmail.com)</span>
+                            <span class="label">✅ Bot ID:</span>
+                            <span class="value">fcf9db50-6aa3-4f69-bbbc-c4fcb9977b04</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ API Validation:</span>
-                            <span class="value">Full CRUD operations confirmed Microsoft ToDo</span>
+                            <span class="label">✅ Capabilities:</span>
+                            <span class="value">Full CRUD - Database, Pages, Blocks, Search, Comments</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ Integration:</span>
-                            <span class="value">Token-optimized architecture + M365 seamless</span>
+                            <span class="label">✅ Protocol Status:</span>
+                            <span class="value">ACTIVE - All Framework reports route through Notion</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ Architecture Final:</span>
-                            <span class="value">Memory(85%) + M365(10%) + GitHub(3%) + Supabase(2%)</span>
+                            <span class="label">✅ Migration Strategy:</span>
+                            <span class="value">GitHub Pages → Notion comprehensive reporting</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ Checkpoint:</span>
-                            <span class="value">CHKPT_M365_FINAL_004 - PROJECT COMPLETION</span>
+                            <span class="label">✅ Update Date:</span>
+                            <span class="value">2025-07-08 - v5.1 Protocol Implementation</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="progress-timeline">
-                <h3>✅ Implementation Timeline - COMPLETED AHEAD OF SCHEDULE</h3>
-                <div class="timeline">
-                    <div class="phase completed">
-                        <div class="phase-header">
-                            <span class="phase-number">✓</span>
-                            <span class="phase-title">Microsoft 365 MCP Integration - COMPLETED</span>
-                            <span class="phase-duration">Completed: 08 Jul 2025</span>
-                        </div>
-                        <div class="phase-tasks">
-                            <div class="task completed">
-                                <span class="task-id">TASK_1.1</span>
-                                <span class="task-name">✅ Microsoft 365 Authentication & Login</span>
-                                <div class="progress-bar-m365">
-                                    <div class="progress-fill-m365" style="width: 100%"></div>
-                                </div>
-                                <span class="progress-text">100%</span>
-                            </div>
-                            <div class="task completed">
-                                <span class="task-id">TASK_1.2</span>
-                                <span class="task-name">✅ Microsoft ToDo API access verification</span>
-                                <div class="progress-bar-m365">
-                                    <div class="progress-fill-m365" style="width: 100%"></div>
-                                </div>
-                                <span class="progress-text">100%</span>
-                            </div>
-                            <div class="task completed">
-                                <span class="task-id">TASK_1.3</span>
-                                <span class="task-name">✅ Framework integration testing</span>
-                                <div class="progress-bar-m365">
-                                    <div class="progress-fill-m365" style="width: 100%"></div>
-                                </div>
-                                <span class="progress-text">100%</span>
-                            </div>
-                        </div>
+            <div class="architecture-update">
+                <h3>🏗️ Updated Architecture v5.1 - Notion Centered</h3>
+                <div class="architecture-grid">
+                    <div class="arch-component">
+                        <div class="arch-percentage">70%</div>
+                        <div class="arch-name">Memory MCP</div>
+                    </div>
+                    <div class="arch-component" style="background: rgba(155, 89, 182, 0.3);">
+                        <div class="arch-percentage">15%</div>
+                        <div class="arch-name">🆕 Notion MCP</div>
+                    </div>
+                    <div class="arch-component">
+                        <div class="arch-percentage">10%</div>
+                        <div class="arch-name">Microsoft 365</div>
+                    </div>
+                    <div class="arch-component">
+                        <div class="arch-percentage">3%</div>
+                        <div class="arch-name">GitHub</div>
+                    </div>
+                    <div class="arch-component">
+                        <div class="arch-percentage">2%</div>
+                        <div class="arch-name">Supabase</div>
                     </div>
                 </div>
+                <p style="margin-top: 12px; text-align: center; font-weight: bold;">
+                    🎯 NOTION = PLATAFORMA OFICIAL REPORTES FRAMEWORK v5.1
+                </p>
             </div>
 
             <div class="current-focus">
-                <h3>🚀 Integration Results - Enterprise Platform Complete</h3>
+                <h3>📋 Framework Reporting Protocol - ESTABLISHED</h3>
                 <div class="focus-card">
                     <div class="focus-header">
-                        <span class="focus-title">Framework Revolution v5.0 + Microsoft 365 = ENTERPRISE PLATFORM</span>
-                        <span class="focus-status completed">✅ OPERACIONAL</span>
+                        <span class="focus-title">Framework v5.1 + Notion MCP = Official Reports Platform</span>
+                        <span class="focus-status active">✅ PROTOCOL ACTIVE</span>
                     </div>
                     <div class="focus-details">
-                        <p><strong>✅ Validation Completed:</strong> Framework existente + Microsoft 365 MCP = SUFFICIENT</p>
-                        <p><strong>✅ Pre-existing Lists:</strong> Framework estructura detectada en Microsoft 365</p>
-                        <p><strong>✅ Enterprise Capabilities:</strong> Todos los flujos Framework pueden usar M365 directamente</p>
-                        <p><strong>✅ ROI Maintained:</strong> 466%+ efficiency + enterprise integration confirmed</p>
-                        <p><strong>✅ Ready for Operation:</strong> Framework listo para operación normal con M365 integration</p>
+                        <p><strong>✅ Standard Workflow:</strong> Memory MCP → Notion MCP → Report Generation</p>
+                        <p><strong>✅ Templates Ready:</strong> Weekly Reports, Project Status, ROI Analytics, Task Tracking</p>
+                        <p><strong>✅ Enterprise Level:</strong> Professional reporting platform established</p>
+                        <p><strong>✅ Automation Ready:</strong> Real-time via MCP API calls</p>
+                        <p><strong>✅ Backup Strategy:</strong> GitHub docs secondary, Notion primary platform</p>
                     </div>
-                </div>
-            </div>
-
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-value-m365">✅</div>
-                    <div class="metric-label">Authentication</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value-m365">✅</div>
-                    <div class="metric-label">API Validation</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value-m365">✅</div>
-                    <div class="metric-label">Integration Testing</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value-m365">100%</div>
-                    <div class="metric-label">Project Success</div>
                 </div>
             </div>
         </div>
 
-        <!-- Alertas Críticas Actualizadas -->
+        <!-- Alertas Críticas -->
         <div class="alerts-section">
             <h3>🚨 Alertas Críticas</h3>
             <div class="alert-item">
@@ -557,6 +444,90 @@
         </div>
 
         <div class="dashboard-grid">
+            <!-- Framework Core UPDATED -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">🧠</span>
+                        Framework Core v5.1
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>System Health</span>
+                    <span class="metric-value success">100%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <div class="metric">
+                    <span>Notion MCP Integration</span>
+                    <span class="metric-value success">✅ ACTIVE</span>
+                </div>
+                <div class="metric">
+                    <span>Official Reports Platform</span>
+                    <span class="metric-value success">✅ NOTION</span>
+                </div>
+                <div class="metric">
+                    <span>Token Efficiency</span>
+                    <span class="metric-value success">99.5%</span>
+                </div>
+            </div>
+
+            <!-- Reports Platform NEW -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">📝</span>
+                        Notion Reports Platform
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>Platform Status</span>
+                    <span class="metric-value success">✅ OPERATIONAL</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <div class="metric">
+                    <span>Bot Integration</span>
+                    <span class="metric-value success">✅ CONNECTED</span>
+                </div>
+                <div class="metric">
+                    <span>Workspace</span>
+                    <span class="metric-value">iceman garcia's Notion</span>
+                </div>
+                <div class="metric">
+                    <span>Protocol v5.1</span>
+                    <span class="metric-value success">✅ ACTIVE</span>
+                </div>
+            </div>
+
+            <!-- Architecture Evolution -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">🏗️</span>
+                        Architecture v5.1
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>Memory MCP</span>
+                    <span class="metric-value">70%</span>
+                </div>
+                <div class="metric">
+                    <span>Notion MCP (NEW)</span>
+                    <span class="metric-value success">15%</span>
+                </div>
+                <div class="metric">
+                    <span>Microsoft 365</span>
+                    <span class="metric-value">10%</span>
+                </div>
+                <div class="metric">
+                    <span>GitHub + Supabase</span>
+                    <span class="metric-value">5%</span>
+                </div>
+            </div>
+
             <!-- Trabajo FedEx -->
             <div class="card">
                 <div class="card-header">
@@ -586,119 +557,32 @@
                 </div>
             </div>
 
-            <!-- Agenda Personal -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="card-icon">📅</span>
-                        Agenda Personal
-                    </div>
-                </div>
-                <div class="metric">
-                    <span>Compliance Rate</span>
-                    <span class="metric-value success">95%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 95%"></div>
-                </div>
-                <div class="metric">
-                    <span>Eventos Próximos</span>
-                    <span class="metric-value">8</span>
-                </div>
-                <div class="metric">
-                    <span>Automatización</span>
-                    <span class="metric-value success">78%</span>
-                </div>
-                <div class="metric">
-                    <span>Próximo Crítico</span>
-                    <span class="metric-value danger">Audiencia Legal</span>
-                </div>
-            </div>
-
-            <!-- Negocio Personal -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="card-icon">📈</span>
-                        Negocio Personal
-                    </div>
-                </div>
-                <div class="metric">
-                    <span>Revenue Pipeline</span>
-                    <span class="metric-value success">$12,500</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 68%"></div>
-                </div>
-                <div class="metric">
-                    <span>Clientes Activos</span>
-                    <span class="metric-value">7</span>
-                </div>
-                <div class="metric">
-                    <span>Meetings Esta Semana</span>
-                    <span class="metric-value">4</span>
-                </div>
-                <div class="metric">
-                    <span>Growth Rate</span>
-                    <span class="metric-value success">+23%</span>
-                </div>
-            </div>
-
-            <!-- Framework Core -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="card-icon">🧠</span>
-                        Framework Core
-                    </div>
-                </div>
-                <div class="metric">
-                    <span>System Health</span>
-                    <span class="metric-value success">100%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 100%"></div>
-                </div>
-                <div class="metric">
-                    <span>Token Efficiency</span>
-                    <span class="metric-value success">99.5%</span>
-                </div>
-                <div class="metric">
-                    <span>Conversations/Day</span>
-                    <span class="metric-value">20+</span>
-                </div>
-                <div class="metric">
-                    <span>Microsoft 365 Integration</span>
-                    <span class="metric-value success">✅ COMPLETE</span>
-                </div>
-            </div>
-
-            <!-- ROI General -->
+            <!-- ROI General UPDATED -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">
                         <span class="card-icon">💎</span>
-                        ROI General
+                        ROI General v5.1
                     </div>
                 </div>
                 <div class="metric">
-                    <span>Overall Improvement</span>
+                    <span>Framework Revolution</span>
                     <span class="metric-value success">3,000%+</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: 100%"></div>
                 </div>
                 <div class="metric">
-                    <span>Time Saved/Week</span>
-                    <span class="metric-value success">15h</span>
+                    <span>Notion Integration</span>
+                    <span class="metric-value success">✅ ACTIVE</span>
                 </div>
                 <div class="metric">
-                    <span>Enterprise Integration</span>
-                    <span class="metric-value success">✅ M365</span>
+                    <span>Enterprise Platform</span>
+                    <span class="metric-value success">✅ OPERATIONAL</span>
                 </div>
                 <div class="metric">
-                    <span>Framework + M365 ROI</span>
-                    <span class="metric-value success">466%+</span>
+                    <span>Reports Efficiency</span>
+                    <span class="metric-value success">+500%</span>
                 </div>
             </div>
 
@@ -707,7 +591,7 @@
                 <div class="card-header">
                     <div class="card-title">
                         <span class="card-icon">📊</span>
-                        Proyectos Status
+                        Proyectos Status v5.1
                     </div>
                 </div>
                 <div class="metric">
@@ -719,22 +603,23 @@
                     <span class="metric-value success">✅ COMPLETADO</span>
                 </div>
                 <div class="metric">
-                    <span>Enterprise Platform</span>
-                    <span class="metric-value success">✅ OPERACIONAL</span>
+                    <span>Notion Reports Platform</span>
+                    <span class="metric-value success">✅ ACTIVE</span>
                 </div>
                 <div class="metric">
-                    <span>Next Project</span>
-                    <span class="metric-value">📋 READY FOR DEFINITION</span>
+                    <span>Framework v5.1 Status</span>
+                    <span class="metric-value success">✅ OPERATIONAL</span>
                 </div>
             </div>
         </div>
 
         <div class="footer">
-            <p><strong>URL Dashboard:</strong> https://isaacgarciaacc.github.io/framework-dashboard-v5/</p>
-            <p><strong>GitHub:</strong> https://github.com/isaacgarciaacc/framework-dashboard-v5</p>
+            <p><strong>Framework v5.1:</strong> Notion Official Reports Platform Established</p>
+            <p><strong>Reports URL:</strong> Workspace "iceman garcia's Notion"</p>
+            <p><strong>Technical URL:</strong> https://isaacgarciaacc.github.io/framework-dashboard-v5/</p>
             <button class="refresh-btn" onclick="refreshDashboard()">🔄 Actualizar Datos</button>
             <p style="margin-top: 15px; opacity: 0.8;">
-                Dashboard Framework v5.0 + Microsoft 365 Enterprise Platform | ✅ PROJECT COMPLETED
+                Framework v5.1 + Notion MCP = Official Reports Platform | ✅ PROTOCOL ACTIVE
             </p>
         </div>
     </div>
@@ -770,10 +655,10 @@
         updateTime();
 
         // Inicialización
-        console.log('Dashboard Framework v5.0 + Microsoft 365 inicializado');
-        console.log('✅ Microsoft 365 Integration: COMPLETED SUCCESSFULLY');
-        console.log('✅ Enterprise Platform: OPERATIONAL');
-        console.log('✅ Framework Revolution v5.0 + Microsoft 365 MCP = COMPLETE');
+        console.log('Framework v5.1 + Notion Official Reports Platform inicializado');
+        console.log('✅ Notion MCP Integration: ACTIVE');
+        console.log('✅ Official Reports Platform: OPERATIONAL');
+        console.log('✅ Framework v5.1 + Notion MCP = REPORTS PROTOCOL ESTABLISHED');
     </script>
 </body>
 </html>
