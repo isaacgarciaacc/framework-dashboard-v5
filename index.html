@@ -79,6 +79,186 @@
             opacity: 0.8;
         }
 
+        /* Microsoft 365 Migration Section Styles */
+        .m365-migration {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .status-badge {
+            background: #4CAF50;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .timeline {
+            margin-top: 16px;
+        }
+
+        .phase {
+            margin-bottom: 20px;
+            border-left: 4px solid #4CAF50;
+            padding-left: 16px;
+        }
+
+        .phase.upcoming {
+            border-left-color: rgba(255,255,255,0.3);
+            opacity: 0.7;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .phase-number {
+            background: #4CAF50;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .phase.upcoming .phase-number {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .phase-tasks {
+            margin-left: 42px;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+        }
+
+        .task-id {
+            font-weight: bold;
+            min-width: 80px;
+        }
+
+        .task-name {
+            flex: 1;
+        }
+
+        .progress-bar-m365 {
+            width: 100px;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill-m365 {
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.3s ease;
+        }
+
+        .task.in-progress .progress-fill-m365 {
+            background: #FF9800;
+        }
+
+        .progress-text {
+            min-width: 40px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .focus-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .focus-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .focus-status.in-progress {
+            background: #FF9800;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .metric-value-m365 {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -244,6 +424,137 @@
                 </div>
                 <div class="last-update" id="lastUpdate">
                     Última actualización: <span id="updateTime">--:--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Microsoft 365 Migration Project Section -->
+        <div class="m365-migration" id="m365-migration">
+            <div class="section-header">
+                <h2>🚀 Framework v5.0 Microsoft 365 Migration</h2>
+                <div class="status-badge active">FASE 1 - EN PROGRESO</div>
+            </div>
+            
+            <div class="migration-overview">
+                <div class="project-info">
+                    <h3>📊 Project Overview</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Objetivo:</span>
+                            <span class="value">Reajustar Framework v5.0 a funcionalidad base con M365 MCP</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Arquitectura:</span>
+                            <span class="value">Memory(85%) + M365(10%) + GitHub(3%) + Supabase(2%)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Timeline:</span>
+                            <span class="value">21 días (07 Ene - 28 Ene 2025)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Checkpoint:</span>
+                            <span class="value">CHKPT_M365_001 ✅</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-timeline">
+                <h3>📅 Implementation Timeline</h3>
+                <div class="timeline">
+                    <div class="phase active">
+                        <div class="phase-header">
+                            <span class="phase-number">1</span>
+                            <span class="phase-title">Configuración Base M365 MCP</span>
+                            <span class="phase-duration">Días 1-3</span>
+                        </div>
+                        <div class="phase-tasks">
+                            <div class="task in-progress">
+                                <span class="task-id">TASK_1.1</span>
+                                <span class="task-name">Mapear funcionalidades Framework vs M365</span>
+                                <div class="progress-bar-m365">
+                                    <div class="progress-fill-m365" style="width: 25%"></div>
+                                </div>
+                                <span class="progress-text">25%</span>
+                            </div>
+                            <div class="task pending">
+                                <span class="task-id">TASK_1.2</span>
+                                <span class="task-name">Configurar autenticación Graph API</span>
+                                <div class="progress-bar-m365">
+                                    <div class="progress-fill-m365" style="width: 0%"></div>
+                                </div>
+                                <span class="progress-text">0%</span>
+                            </div>
+                            <div class="task pending">
+                                <span class="task-id">TASK_1.3</span>
+                                <span class="task-name">Verificar conectividad M365</span>
+                                <div class="progress-bar-m365">
+                                    <div class="progress-fill-m365" style="width: 0%"></div>
+                                </div>
+                                <span class="progress-text">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="phase upcoming">
+                        <div class="phase-header">
+                            <span class="phase-number">2</span>
+                            <span class="phase-title">Adaptación Smart Triggers v5.0</span>
+                            <span class="phase-duration">Días 4-7</span>
+                        </div>
+                    </div>
+
+                    <div class="phase upcoming">
+                        <div class="phase-header">
+                            <span class="phase-number">3</span>
+                            <span class="phase-title">Migración Workflows Críticos</span>
+                            <span class="phase-duration">Días 8-14</span>
+                        </div>
+                    </div>
+
+                    <div class="phase upcoming">
+                        <div class="phase-header">
+                            <span class="phase-number">4</span>
+                            <span class="phase-title">Integración Framework v5.0</span>
+                            <span class="phase-duration">Días 15-21</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="current-focus">
+                <h3>🎯 Current Focus</h3>
+                <div class="focus-card">
+                    <div class="focus-header">
+                        <span class="focus-title">TASK_1.1 - Mapeo Funcionalidades</span>
+                        <span class="focus-status in-progress">EN PROGRESO</span>
+                    </div>
+                    <div class="focus-details">
+                        <p><strong>Descripción:</strong> Inventory funcionalidades Framework Revolution + M365 equivalents</p>
+                        <p><strong>Progreso:</strong> 25% - Inventario Framework completado parcialmente</p>
+                        <p><strong>Due Date:</strong> 08 Enero 2025</p>
+                        <p><strong>Next Step:</strong> Completar mapeo M365 tools disponibles</p>
+                        <p><strong>Estimated Time:</strong> 4-6 horas restantes</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value-m365">25%</div>
+                    <div class="metric-label">FASE 1 Progress</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value-m365">3</div>
+                    <div class="metric-label">Days Remaining Phase 1</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value-m365">95%</div>
+                    <div class="metric-label">Target Compatibility</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value-m365">+400%</div>
+                    <div class="metric-label">ROI Potential</div>
                 </div>
             </div>
         </div>
@@ -424,15 +735,15 @@
                     <span class="metric-value success">✅ COMPLETADO</span>
                 </div>
                 <div class="metric">
+                    <span>M365 Migration</span>
+                    <span class="metric-value warning">🔄 FASE 1</span>
+                </div>
+                <div class="metric">
                     <span>Agenda Personal</span>
                     <span class="metric-value warning">🔄 INICIADO</span>
                 </div>
                 <div class="metric">
                     <span>Finanzas Management</span>
-                    <span class="metric-value">📋 PIPELINE</span>
-                </div>
-                <div class="metric">
-                    <span>Legal Tracking</span>
                     <span class="metric-value">📋 PIPELINE</span>
                 </div>
             </div>
@@ -493,7 +804,8 @@
 
         // Inicialización
         console.log('Dashboard Framework v5.0 inicializado');
-        console.log('APIs disponibles: Google Calendar, Gmail, Supabase, GitHub');
+        console.log('APIs disponibles: Google Calendar, Gmail, Supabase, GitHub, Microsoft 365');
+        console.log('Microsoft 365 Migration Project: FASE 1 - EN PROGRESO');
         console.log('Siguiente actualización automática en 5 minutos');
     </script>
 </body>
