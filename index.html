@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Framework v5.1 - Notion Official Reports Platform</title>
+    <title>Dashboard Framework v6.0 Enhanced - GitHub Pages Official Reports Platform</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
             min-height: 100vh;
         }
@@ -35,7 +35,7 @@
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 700;
             margin-bottom: 10px;
             background: linear-gradient(45deg, #ffd700, #ffed4e);
@@ -79,14 +79,14 @@
             opacity: 0.8;
         }
 
-        /* Notion Official Reports Section */
-        .notion-reports {
-            background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);
+        /* GitHub Pages Official Reports Section */
+        .github-reports {
+            background: linear-gradient(135deg, #24292e 0%, #586069 100%);
             border-radius: 12px;
             padding: 24px;
             margin: 20px 0;
             color: white;
-            box-shadow: 0 10px 30px rgba(155, 89, 182, 0.3);
+            box-shadow: 0 10px 30px rgba(36, 41, 46, 0.3);
         }
 
         .section-header {
@@ -102,22 +102,17 @@
         }
 
         .status-badge {
-            background: #9B59B6;
+            background: #28a745;
             padding: 8px 16px;
             border-radius: 20px;
             font-weight: bold;
             font-size: 0.9em;
-            animation: glow 2s infinite;
+            animation: githubGlow 3s infinite;
         }
 
-        .status-badge.active {
-            background: #8E44AD;
-            animation: notionGlow 3s infinite;
-        }
-
-        @keyframes notionGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(155, 89, 182, 0.8); }
-            50% { box-shadow: 0 0 20px rgba(155, 89, 182, 1); }
+        @keyframes githubGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(40, 167, 69, 0.8); }
+            50% { box-shadow: 0 0 20px rgba(40, 167, 69, 1); }
         }
 
         .info-grid {
@@ -255,29 +250,28 @@
             transition: width 0.5s ease;
         }
 
-        .alerts-section {
-            background: rgba(255, 68, 68, 0.2);
-            border: 1px solid rgba(255, 68, 68, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .alert-item {
+        .quick-actions {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
         }
 
-        .alert-item:last-child {
-            border-bottom: none;
+        .action-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s ease;
         }
 
-        .alert-icon {
-            color: #ff4444;
-            font-size: 1.2rem;
+        .action-btn:hover {
+            transform: translateY(-2px);
         }
 
         .footer {
@@ -316,23 +310,28 @@
                 flex-direction: column;
                 gap: 10px;
             }
+
+            .quick-actions {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Framework v5.1 - Notion Official Reports Platform</h1>
+            <h1>🚀 Framework v6.0 Enhanced Architecture</h1>
             <div class="status-bar">
                 <div class="status-item">
                     <div class="status-dot"></div>
-                    <span>Notion Reports Platform Operacional</span>
+                    <span>GitHub Pages Reports Platform Operacional</span>
                 </div>
                 <div class="status-item">
-                    <span>ROI: 3,000%+</span>
+                    <span>ROI: 9,500%+</span>
                 </div>
                 <div class="status-item">
-                    <span>Notion MCP: ✅ ACTIVE</span>
+                    <span>GitHub Pages: ✅ OFFICIAL</span>
                 </div>
                 <div class="last-update" id="lastUpdate">
                     Última actualización: <span id="updateTime">--:--</span>
@@ -340,116 +339,110 @@
             </div>
         </div>
 
-        <!-- Notion Official Reports Platform Section -->
-        <div class="notion-reports" id="notion-reports">
+        <!-- GitHub Pages Official Reports Platform Section -->
+        <div class="github-reports" id="github-reports">
             <div class="section-header">
-                <h2>📝 Notion Official Reports Platform v5.1 - PROTOCOL ACTIVE</h2>
-                <div class="status-badge active">✅ PROTOCOLO ACTIVO</div>
+                <h2>📊 GitHub Pages Official Reports Platform v6.0 - PROTOCOL ACTIVE</h2>
+                <div class="status-badge">✅ PROTOCOLO CARDINAL ACTIVO</div>
             </div>
             
-            <div class="notion-overview">
+            <div class="github-overview">
                 <div class="project-info">
-                    <h3>🎯 NOTION MCP = PLATAFORMA OFICIAL DE REPORTES FRAMEWORK</h3>
+                    <h3>🎯 GITHUB PAGES = PLATAFORMA OFICIAL DE REPORTES FRAMEWORK v6.0</h3>
                     <div class="info-grid">
                         <div class="info-item">
-                            <span class="label">✅ Bot Integration:</span>
-                            <span class="value">Workspace "iceman garcia's Notion" operacional</span>
+                            <span class="label">✅ Repositorio Oficial:</span>
+                            <span class="value">framework-dashboard-v5</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ Bot ID:</span>
-                            <span class="value">fcf9db50-6aa3-4f69-bbbc-c4fcb9977b04</span>
+                            <span class="label">✅ URL Oficial:</span>
+                            <span class="value">https://isaacgarciaacc.github.io/framework-dashboard-v5/</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ Capabilities:</span>
-                            <span class="value">Full CRUD - Database, Pages, Blocks, Search, Comments</span>
+                            <span class="label">✅ Protocolo Cardinal:</span>
+                            <span class="value">GitHub Pages = ÚNICA plataforma reporteo Framework</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ Protocol Status:</span>
-                            <span class="value">ACTIVE - All Framework reports route through Notion</span>
+                            <span class="label">✅ Estructura Navegable:</span>
+                            <span class="value">Dashboard Principal + /reportes/ + Reportes individuales</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ Migration Strategy:</span>
-                            <span class="value">GitHub Pages → Notion comprehensive reporting</span>
+                            <span class="label">✅ Reportes Activos:</span>
+                            <span class="value">22 Julio 2025 - Framework v6.0 Enhanced Progreso Integral</span>
                         </div>
                         <div class="info-item">
-                            <span class="label">✅ Update Date:</span>
-                            <span class="value">2025-07-08 - v5.1 Protocol Implementation</span>
+                            <span class="label">✅ Framework Version:</span>
+                            <span class="value">v6.0 Enhanced Architecture - GitHub Pages Integration</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="architecture-update">
-                <h3>🏗️ Updated Architecture v5.1 - Notion Centered</h3>
+                <h3>🏗️ Arquitectura Framework v6.0 Enhanced - GitHub Pages Centered</h3>
                 <div class="architecture-grid">
                     <div class="arch-component">
-                        <div class="arch-percentage">70%</div>
+                        <div class="arch-percentage">60%</div>
+                        <div class="arch-name">Supabase Knowledge</div>
+                    </div>
+                    <div class="arch-component">
+                        <div class="arch-percentage">20%</div>
                         <div class="arch-name">Memory MCP</div>
                     </div>
-                    <div class="arch-component" style="background: rgba(155, 89, 182, 0.3);">
+                    <div class="arch-component">
                         <div class="arch-percentage">15%</div>
-                        <div class="arch-name">🆕 Notion MCP</div>
+                        <div class="arch-name">Microsoft To Do</div>
                     </div>
-                    <div class="arch-component">
-                        <div class="arch-percentage">10%</div>
-                        <div class="arch-name">Microsoft 365</div>
-                    </div>
-                    <div class="arch-component">
+                    <div class="arch-component" style="background: rgba(40, 167, 69, 0.3);">
                         <div class="arch-percentage">3%</div>
-                        <div class="arch-name">GitHub</div>
+                        <div class="arch-name">🆕 GitHub Pages</div>
                     </div>
                     <div class="arch-component">
-                        <div class="arch-percentage">2%</div>
-                        <div class="arch-name">Supabase</div>
+                        <div class="arch-percentage">1%</div>
+                        <div class="arch-name">Gmail</div>
+                    </div>
+                    <div class="arch-component">
+                        <div class="arch-percentage">1%</div>
+                        <div class="arch-name">GitHub Docs</div>
                     </div>
                 </div>
                 <p style="margin-top: 12px; text-align: center; font-weight: bold;">
-                    🎯 NOTION = PLATAFORMA OFICIAL REPORTES FRAMEWORK v5.1
+                    🎯 GITHUB PAGES = PLATAFORMA OFICIAL REPORTES FRAMEWORK v6.0 ENHANCED
                 </p>
             </div>
 
             <div class="current-focus">
-                <h3>📋 Framework Reporting Protocol - ESTABLISHED</h3>
+                <h3>📋 Protocolo Cardinal Reporteo GitHub Pages v6.0</h3>
                 <div class="focus-card">
                     <div class="focus-header">
-                        <span class="focus-title">Framework v5.1 + Notion MCP = Official Reports Platform</span>
-                        <span class="focus-status active">✅ PROTOCOL ACTIVE</span>
+                        <span class="focus-title">Framework v6.0 Enhanced + GitHub Pages = Official Reports Platform</span>
+                        <span class="focus-status">✅ PROTOCOL CARDINAL ACTIVE</span>
                     </div>
                     <div class="focus-details">
-                        <p><strong>✅ Standard Workflow:</strong> Memory MCP → Notion MCP → Report Generation</p>
-                        <p><strong>✅ Templates Ready:</strong> Weekly Reports, Project Status, ROI Analytics, Task Tracking</p>
-                        <p><strong>✅ Enterprise Level:</strong> Professional reporting platform established</p>
-                        <p><strong>✅ Automation Ready:</strong> Real-time via MCP API calls</p>
-                        <p><strong>✅ Backup Strategy:</strong> GitHub docs secondary, Notion primary platform</p>
+                        <p><strong>✅ Workflow Oficial:</strong> Memory MCP + Supabase Knowledge → GitHub Pages Report Generation</p>
+                        <p><strong>✅ Estructura Navegable:</strong> Dashboard + /reportes/ + HTML individuales</p>
+                        <p><strong>✅ Protocolo Cardinal:</strong> TODOS los reportes Framework ÚNICAMENTE en GitHub Pages</p>
+                        <p><strong>✅ Repository ÚNICO:</strong> framework-dashboard-v5 = OFICIAL para reporteo</p>
+                        <p><strong>✅ URL Base Oficial:</strong> https://isaacgarciaacc.github.io/framework-dashboard-v5/</p>
+                        <p><strong>🚫 PROHIBIDO:</strong> Crear reportes en otros repositories o plataformas</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Alertas Críticas -->
-        <div class="alerts-section">
-            <h3>🚨 Alertas Críticas</h3>
-            <div class="alert-item">
-                <span class="alert-icon">⚖️</span>
-                <div>
-                    <strong>Litigio Custodia:</strong> Próxima audiencia en 14 días
-                </div>
-            </div>
-            <div class="alert-item">
-                <span class="alert-icon">💳</span>
-                <div>
-                    <strong>Pago Tarjeta:</strong> Vence en 3 días
-                </div>
-            </div>
+        <div class="quick-actions">
+            <a href="reportes/" class="action-btn">📊 Ver Todos los Reportes</a>
+            <a href="reportes/2025-07-22-framework-progreso-integral.html" class="action-btn">🚀 Último Reporte (22 Jul)</a>
+            <a href="https://github.com/isaacgarciaacc/framework-dashboard-v5" class="action-btn">📂 GitHub Repository</a>
         </div>
 
         <div class="dashboard-grid">
-            <!-- Framework Core UPDATED -->
+            <!-- Framework Core v6.0 Enhanced -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">
                         <span class="card-icon">🧠</span>
-                        Framework Core v5.1
+                        Framework Core v6.0 Enhanced
                     </div>
                 </div>
                 <div class="metric">
@@ -460,25 +453,25 @@
                     <div class="progress-fill" style="width: 100%"></div>
                 </div>
                 <div class="metric">
-                    <span>Notion MCP Integration</span>
-                    <span class="metric-value success">✅ ACTIVE</span>
+                    <span>ROI Framework</span>
+                    <span class="metric-value success">9,500%+</span>
                 </div>
                 <div class="metric">
-                    <span>Official Reports Platform</span>
-                    <span class="metric-value success">✅ NOTION</span>
+                    <span>GitHub Pages Integration</span>
+                    <span class="metric-value success">✅ OFFICIAL</span>
                 </div>
                 <div class="metric">
-                    <span>Token Efficiency</span>
-                    <span class="metric-value success">99.5%</span>
+                    <span>Protocolos v6.0</span>
+                    <span class="metric-value success">3 Activos</span>
                 </div>
             </div>
 
-            <!-- Reports Platform NEW -->
+            <!-- GitHub Reports Platform -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">
-                        <span class="card-icon">📝</span>
-                        Notion Reports Platform
+                        <span class="card-icon">📊</span>
+                        GitHub Pages Reports
                     </div>
                 </div>
                 <div class="metric">
@@ -489,137 +482,137 @@
                     <div class="progress-fill" style="width: 100%"></div>
                 </div>
                 <div class="metric">
-                    <span>Bot Integration</span>
-                    <span class="metric-value success">✅ CONNECTED</span>
+                    <span>Repository</span>
+                    <span class="metric-value success">framework-dashboard-v5</span>
                 </div>
                 <div class="metric">
-                    <span>Workspace</span>
-                    <span class="metric-value">iceman garcia's Notion</span>
-                </div>
-                <div class="metric">
-                    <span>Protocol v5.1</span>
+                    <span>Protocol Cardinal</span>
                     <span class="metric-value success">✅ ACTIVE</span>
+                </div>
+                <div class="metric">
+                    <span>Reportes Disponibles</span>
+                    <span class="metric-value">1</span>
                 </div>
             </div>
 
-            <!-- Architecture Evolution -->
+            <!-- AGS_FedEx -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">🏢</span>
+                        AGS_FedEx (Trabajo Empleador)
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>Issues Críticos</span>
+                    <span class="metric-value danger">3</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <div class="metric">
+                    <span>Protocolo Minutas IA</span>
+                    <span class="metric-value success">✅ ACTIVO</span>
+                </div>
+                <div class="metric">
+                    <span>ROI Minutas</span>
+                    <span class="metric-value success">85-90%</span>
+                </div>
+                <div class="metric">
+                    <span>Status General</span>
+                    <span class="metric-value warning">En Progreso</span>
+                </div>
+            </div>
+
+            <!-- AirCraftCare -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">✈️</span>
+                        AirCraftCare (MI Negocio)
+                    </div>
+                </div>
+                <div class="metric">
+                    <span>ROI Negocio</span>
+                    <span class="metric-value success">1,574%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%"></div>
+                </div>
+                <div class="metric">
+                    <span>Críticos Pendientes</span>
+                    <span class="metric-value danger">1</span>
+                </div>
+                <div class="metric">
+                    <span>AWS Migration</span>
+                    <span class="metric-value warning">Fase 1</span>
+                </div>
+                <div class="metric">
+                    <span>Status General</span>
+                    <span class="metric-value success">Optimizado</span>
+                </div>
+            </div>
+
+            <!-- Arquitectura v6.0 -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">
                         <span class="card-icon">🏗️</span>
-                        Architecture v5.1
+                        Arquitectura v6.0 Enhanced
                     </div>
+                </div>
+                <div class="metric">
+                    <span>Supabase Knowledge Base</span>
+                    <span class="metric-value success">60%</span>
                 </div>
                 <div class="metric">
                     <span>Memory MCP</span>
-                    <span class="metric-value">70%</span>
+                    <span class="metric-value success">20%</span>
                 </div>
                 <div class="metric">
-                    <span>Notion MCP (NEW)</span>
+                    <span>Microsoft To Do</span>
                     <span class="metric-value success">15%</span>
                 </div>
                 <div class="metric">
-                    <span>Microsoft 365</span>
-                    <span class="metric-value">10%</span>
-                </div>
-                <div class="metric">
-                    <span>GitHub + Supabase</span>
-                    <span class="metric-value">5%</span>
+                    <span>GitHub Pages (NEW)</span>
+                    <span class="metric-value success">3%</span>
                 </div>
             </div>
 
-            <!-- Trabajo FedEx -->
+            <!-- Proyectos Activos -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">
-                        <span class="card-icon">💼</span>
-                        Trabajo FedEx
+                        <span class="card-icon">🚀</span>
+                        Proyectos Activos
                     </div>
                 </div>
                 <div class="metric">
-                    <span>Productividad Score</span>
-                    <span class="metric-value success">92%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 92%"></div>
+                    <span>Whisper Mini Local</span>
+                    <span class="metric-value warning">En Desarrollo</span>
                 </div>
                 <div class="metric">
-                    <span>Horas Logged</span>
-                    <span class="metric-value">42h/semana</span>
+                    <span>n8n Oracle MCP Integration</span>
+                    <span class="metric-value warning">Configuración</span>
                 </div>
                 <div class="metric">
-                    <span>Proyectos Activos</span>
-                    <span class="metric-value">3</span>
+                    <span>AWS Migration AirCraftCare</span>
+                    <span class="metric-value warning">Fase 1</span>
                 </div>
                 <div class="metric">
-                    <span>Next Deadline</span>
-                    <span class="metric-value warning">2 días</span>
-                </div>
-            </div>
-
-            <!-- ROI General UPDATED -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="card-icon">💎</span>
-                        ROI General v5.1
-                    </div>
-                </div>
-                <div class="metric">
-                    <span>Framework Revolution</span>
-                    <span class="metric-value success">3,000%+</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 100%"></div>
-                </div>
-                <div class="metric">
-                    <span>Notion Integration</span>
-                    <span class="metric-value success">✅ ACTIVE</span>
-                </div>
-                <div class="metric">
-                    <span>Enterprise Platform</span>
-                    <span class="metric-value success">✅ OPERATIONAL</span>
-                </div>
-                <div class="metric">
-                    <span>Reports Efficiency</span>
-                    <span class="metric-value success">+500%</span>
-                </div>
-            </div>
-
-            <!-- Proyectos Status UPDATED -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="card-icon">📊</span>
-                        Proyectos Status v5.1
-                    </div>
-                </div>
-                <div class="metric">
-                    <span>Framework Revolution</span>
+                    <span>GitHub Pages Reports</span>
                     <span class="metric-value success">✅ COMPLETADO</span>
-                </div>
-                <div class="metric">
-                    <span>Microsoft 365 Integration</span>
-                    <span class="metric-value success">✅ COMPLETADO</span>
-                </div>
-                <div class="metric">
-                    <span>Notion Reports Platform</span>
-                    <span class="metric-value success">✅ ACTIVE</span>
-                </div>
-                <div class="metric">
-                    <span>Framework v5.1 Status</span>
-                    <span class="metric-value success">✅ OPERATIONAL</span>
                 </div>
             </div>
         </div>
 
         <div class="footer">
-            <p><strong>Framework v5.1:</strong> Notion Official Reports Platform Established</p>
-            <p><strong>Reports URL:</strong> Workspace "iceman garcia's Notion"</p>
-            <p><strong>Technical URL:</strong> https://isaacgarciaacc.github.io/framework-dashboard-v5/</p>
+            <p><strong>Framework v6.0 Enhanced:</strong> GitHub Pages Official Reports Platform Established</p>
+            <p><strong>URL Oficial:</strong> https://isaacgarciaacc.github.io/framework-dashboard-v5/</p>
+            <p><strong>Repository:</strong> framework-dashboard-v5 | <strong>Protocolo Cardinal:</strong> GitHub Pages = ÚNICA plataforma reporteo</p>
             <button class="refresh-btn" onclick="refreshDashboard()">🔄 Actualizar Datos</button>
             <p style="margin-top: 15px; opacity: 0.8;">
-                Framework v5.1 + Notion MCP = Official Reports Platform | ✅ PROTOCOL ACTIVE
+                Framework v6.0 Enhanced + GitHub Pages = Official Reports Platform | ✅ PROTOCOL CARDINAL ACTIVE
             </p>
         </div>
     </div>
@@ -655,10 +648,12 @@
         updateTime();
 
         // Inicialización
-        console.log('Framework v5.1 + Notion Official Reports Platform inicializado');
-        console.log('✅ Notion MCP Integration: ACTIVE');
+        console.log('Framework v6.0 Enhanced + GitHub Pages Official Reports Platform inicializado');
+        console.log('✅ GitHub Pages Integration: ACTIVE');
         console.log('✅ Official Reports Platform: OPERATIONAL');
-        console.log('✅ Framework v5.1 + Notion MCP = REPORTS PROTOCOL ESTABLISHED');
+        console.log('✅ Framework v6.0 Enhanced + GitHub Pages = REPORTS PROTOCOL CARDINAL ESTABLISHED');
+        console.log('🎯 ROI Framework: 9,500%+ | Repositorio: framework-dashboard-v5');
+        console.log('📊 URL Oficial: https://isaacgarciaacc.github.io/framework-dashboard-v5/');
     </script>
 </body>
 </html>
