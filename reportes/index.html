@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework v6.0 Enhanced - Todos los Reportes - GitHub Pages Official Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .navigation {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 0 10px;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+        }
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .report-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        .report-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .report-date {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        .report-description {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .report-metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+        }
+        .metric {
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .metric-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .report-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .stats-section {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .protocol-banner {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <a href="../index.html" class="nav-link">🏠 Dashboard Principal</a>
+            <a href="https://github.com/isaacgarciaacc/framework-dashboard-v5" class="nav-link">📂 GitHub Repo</a>
+        </div>
+
+        <div class="header">
+            <h1>📊 Framework v6.0 Enhanced - Todos los Reportes</h1>
+            <p>GitHub Pages Official Reports Platform</p>
+        </div>
+
+        <div class="protocol-banner">
+            <h2>🎯 PROTOCOLO CARDINAL REPORTEO v6.0</h2>
+            <p><strong>GitHub Pages = Plataforma OFICIAL de Reportes Framework</strong></p>
+            <p>Repositorio: framework-dashboard-v5 | URL: https://isaacgarciaacc.github.io/framework-dashboard-v5/</p>
+        </div>
+
+        <div class="stats-section">
+            <h2>📈 Estadísticas Generales Framework</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">9,500%+</div>
+                    <div class="stat-label">ROI Framework</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Reportes Publicados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Protocolos Activos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">v6.0</div>
+                    <div class="stat-label">Arquitectura Enhanced</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Áreas Seguimiento</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">85-90%</div>
+                    <div class="stat-label">Time Reduction</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="reports-grid">
+            <!-- Report 1: 22 Julio 2025 -->
+            <div class="report-card">
+                <div class="report-title">🚀 Framework v6.0 Enhanced - Reporte Progreso Integral</div>
+                <div class="report-date">📅 22 Julio 2025</div>
+                <div class="report-description">
+                    Reporte completo de progreso de todas las áreas del Framework v6.0 Enhanced Architecture. 
+                    Incluye métricas de AGS_FedEx, AirCraftCare, Framework Core, y área Judicial. 
+                    ROI general 9,500%+ con protocolos Work Structure, Anti-Redundancia y Minutas IA activos.
+                </div>
+                <div class="report-metrics">
+                    <div class="metric">
+                        <div class="metric-value">9,500%+</div>
+                        <div class="metric-label">ROI Framework</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">1,574%</div>
+                        <div class="metric-label">ROI AirCraftCare</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">85%</div>
+                        <div class="metric-label">Minutas IA ROI</div>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <a href="2025-07-22-framework-progreso-integral.html" class="btn btn-primary">📖 Ver Reporte</a>
+                    <a href="https://github.com/isaacgarciaacc/framework-dashboard-v5/blob/main/reportes/2025-07-22-framework-progreso-integral.html" class="btn btn-secondary">📂 GitHub</a>
+                </div>
+            </div>
+
+            <!-- Template para futuros reportes -->
+            <div class="report-card" style="border-left-color: #ccc; opacity: 0.7;">
+                <div class="report-title">📋 Próximo Reporte Framework</div>
+                <div class="report-date">📅 Bajo Demanda</div>
+                <div class="report-description">
+                    Los próximos reportes se generarán bajo demanda siguiendo el Protocolo Cardinal de Reporteo v6.0.
+                    Cada reporte incluirá métricas actualizadas de todas las áreas y progreso de proyectos activos.
+                </div>
+                <div class="report-metrics">
+                    <div class="metric">
+                        <div class="metric-value">TBD</div>
+                        <div class="metric-label">ROI</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">TBD</div>
+                        <div class="metric-label">Proyectos</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">TBD</div>
+                        <div class="metric-label">Status</div>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <div class="btn btn-secondary" style="cursor: not-allowed;">⏳ Pendiente</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Framework v6.0 Enhanced Architecture</strong> - GitHub Pages Official Reports Platform</p>
+            <p><strong>Repositorio:</strong> framework-dashboard-v5 | <strong>Protocolo:</strong> GitHub Pages Reporteo Oficial</p>
+            <p><strong>URL Base:</strong> https://isaacgarciaacc.github.io/framework-dashboard-v5/</p>
+            <p><strong>Arquitectura:</strong> Supabase (60%) + Memory MCP (20%) + Microsoft To Do (15%) + GitHub Pages (3%) + Gmail (1%)</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('Framework v6.0 Enhanced - Todos los Reportes - GitHub Pages Platform');
+        console.log('✅ Protocolo Cardinal Reporteo: GitHub Pages OFICIAL');
+        console.log('📊 Reportes disponibles: 1 (22 Julio 2025)');
+        
+        // Auto-update stats
+        const updateStats = () => {
+            const reportCards = document.querySelectorAll('.report-card');
+            const activeReports = Array.from(reportCards).filter(card => 
+                !card.style.opacity || card.style.opacity === '1'
+            );
+            
+            const totalReports = activeReports.length;
+            const statsValue = document.querySelector('.stat-value');
+            if (statsValue) {
+                statsValue.textContent = totalReports;
+            }
+        };
+        
+        updateStats();
+    </script>
+</body>
+</html>
