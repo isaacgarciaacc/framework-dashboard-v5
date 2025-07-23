@@ -74,6 +74,10 @@
             border-left: 5px solid #ff6b6b;
             background: linear-gradient(135deg, #fff 0%, #fff5f5 100%);
         }
+        .report-card.minutas {
+            border-left: 5px solid #28a745;
+            background: linear-gradient(135deg, #fff 0%, #f5fff5 100%);
+        }
         .report-title {
             font-size: 1.4rem;
             font-weight: bold;
@@ -137,6 +141,10 @@
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
         }
+        .btn-minutas {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
         .btn:hover {
             transform: translateY(-2px);
         }
@@ -167,14 +175,6 @@
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.9;
-        }
-        .protocol-banner {
-            background: linear-gradient(45deg, #ff6b6b, #ffa726);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            text-align: center;
         }
         .v7-banner {
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
@@ -221,7 +221,7 @@
                     <div class="stat-label">Token Efficiency</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">4</div>
+                    <div class="stat-value">6</div>
                     <div class="stat-label">Reportes Activos</div>
                 </div>
                 <div class="stat-item">
@@ -244,10 +244,68 @@
         </div>
 
         <div class="reports-grid">
-            <!-- NUEVO Report Framework v7.0 - 22 Julio 2025 -->
+            <!-- NUEVO - Minutas IA Seguimiento - 23 Julio 2025 -->
+            <div class="report-card minutas">
+                <div class="report-title">🤖 Minutas IA - Seguimiento Actividades Framework</div>
+                <div class="report-date">📅 23 Julio 2025 - HOY</div>
+                <div class="report-description">
+                    <strong>Procesamiento automático Minutas IA v7.0</strong> - Análisis completo minuta reunión 23 julio con 
+                    generación automática de 5 tareas categorizadas FedEx. Incluye 2 acciones críticas (acceso DB + deploy script), 
+                    timeline detallado, y compliance total Work Structure Protocol. Procesamiento < 5 minutos.
+                </div>
+                <div class="report-metrics">
+                    <div class="metric">
+                        <div class="metric-value">5</div>
+                        <div class="metric-label">Tareas Generadas</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">2</div>
+                        <div class="metric-label">Críticas</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">Auto-Processing</div>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <a href="2025-07-23-minutas-seguimiento-actividades.html" class="btn btn-minutas">📖 Ver Reporte</a>
+                    <a href="https://github.com/isaacgarciaacc/framework-dashboard-v5/blob/main/reportes/2025-07-23-minutas-seguimiento-actividades.html" class="btn btn-secondary">📂 GitHub</a>
+                </div>
+            </div>
+
+            <!-- Report Estado Salud MCP - 23 Julio 2025 -->
+            <div class="report-card v7">
+                <div class="report-title">🔧 Estado Salud MCP v7.0 - Diagnóstico Integral</div>
+                <div class="report-date">📅 23 Julio 2025</div>
+                <div class="report-description">
+                    <strong>Diagnóstico completo estado salud MCP tools</strong> - Análisis exhaustivo conectividad, 
+                    performance y funcionalidad de 12 herramientas MCP activas. Incluye GitHub, Microsoft 365, 
+                    Supabase, Notion, y herramientas especializadas. Métricas detalladas + recomendaciones optimización.
+                </div>
+                <div class="report-metrics">
+                    <div class="metric">
+                        <div class="metric-value">12</div>
+                        <div class="metric-label">Tools Analizadas</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">95%</div>
+                        <div class="metric-label">Health Score</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">3</div>
+                        <div class="metric-label">Optimizaciones</div>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <a href="2025-07-23-estado-salud-mcp-v7.html" class="btn btn-v7">📖 Ver Diagnóstico</a>
+                    <a href="https://github.com/isaacgarciaacc/framework-dashboard-v5/blob/main/reportes/2025-07-23-estado-salud-mcp-v7.html" class="btn btn-secondary">📂 GitHub</a>
+                </div>
+            </div>
+
+            <!-- Report Framework v7.0 - 22 Julio 2025 -->
             <div class="report-card v7">
                 <div class="report-title">🚀 Framework v7.0 - Reporte Avance Consolidado</div>
-                <div class="report-date">📅 22 Julio 2025 - NUEVO</div>
+                <div class="report-date">📅 22 Julio 2025</div>
                 <div class="report-description">
                     <strong>Framework v7.0 Zero-Token Architecture</strong> - Reporte consolidado de avance post-procesamiento tareas completadas. 
                     Incluye métricas 99.8% eficiencia tokens, protocolos v7.0 activos, pipeline FedEx, AWS Migration AirCraftCare, 
@@ -372,7 +430,7 @@
     <script>
         console.log('Framework v7.0 Zero-Token - Todos los Reportes - GitHub Pages Platform');
         console.log('✅ Protocolo Cardinal Reporteo v7.0: GitHub Pages OFICIAL');
-        console.log('📊 Reportes disponibles: 4 (incluyendo v7.0 Zero-Token)');
+        console.log('📊 Reportes disponibles: 6 (incluyendo Minutas IA + MCP Health + v7.0 Zero-Token)');
         console.log('🚀 ROI TOKEN: 99.8% reducción vs v6.0');
         
         // Auto-update stats
@@ -392,6 +450,7 @@
         console.log('🎯 Framework v7.0 Zero-Token Architecture: ACTIVO');
         console.log('🛡️ Protocolos v7.0: Work Structure + Anti-Redundancy + Minutas IA + GitHub Pages');
         console.log('📊 System Context: ZERO tokens + máxima inteligencia');
+        console.log('🤖 Minutas IA: Procesamiento automático < 5min + tareas categorizadas');
     </script>
 </body>
 </html>
