@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Gestión Empresarial v1.1 (Claude frixed)</title>
+    <title>Dashboard de Gestión Empresarial v1.2 (Extensión-Safe)</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
@@ -104,63 +104,130 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        .connection-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .debug-info {
+            background-color: #e2e3e5;
+            border: 1px solid #d6d8db;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Dashboard de Gestión Centralizada v1.1 (Claude frixed)</h1>
+            <h1>Dashboard de Gestión Centralizada v1.2</h1>
             <p>Visibilidad en tiempo real de dominios, proyectos, tareas y actividades.</p>
             <div id="connection-status" class="connection-status">Verificando conexión...</div>
+            <div id="debug-info" class="debug-info" style="display: none;"></div>
         </header>
 
         <div class="dashboard-grid">
             <div class="card" id="domains-card">
                 <h2>Dominios de Negocio</h2>
-                <div id="domains-summary" class="empty-state">Cargando dominios...</div>
-                <ul id="domains-list">
-                    <!-- Los dominios se cargarán aquí -->
-                </ul>
+                <div id="domains-summary" class="empty-state">Esperando verificación de conexión...</div>
+                <ul id="domains-list"></ul>
             </div>
 
             <div class="card" id="projects-card">
                 <h2>Proyectos Actuales</h2>
-                <div id="projects-summary" class="empty-state">Cargando proyectos...</div>
-                <ul id="projects-list">
-                    <!-- Los proyectos se cargarán aquí -->
-                </ul>
+                <div id="projects-summary" class="empty-state">Esperando verificación de conexión...</div>
+                <ul id="projects-list"></ul>
             </div>
 
             <div class="card" id="tasks-card">
                 <h2>Tareas Pendientes</h2>
-                <div id="tasks-summary" class="empty-state">Cargando tareas...</div>
-                <ul id="tasks-list">
-                    <!-- Las tareas se cargarán aquí -->
-                </ul>
+                <div id="tasks-summary" class="empty-state">Esperando verificación de conexión...</div>
+                <ul id="tasks-list"></ul>
             </div>
 
             <div class="card" id="action-plans-card">
                 <h2>Planes de Acción Recientes</h2>
-                <div id="action-plans-summary" class="empty-state">Cargando planes de acción...</div>
-                <ul id="action-plans-list">
-                    <!-- Los planes de acción se cargarán aquí -->
-                </ul>
+                <div id="action-plans-summary" class="empty-state">Esperando verificación de conexión...</div>
+                <ul id="action-plans-list"></ul>
             </div>
         </div>
     </div>
 
     <script>
+        // Función para verificar si Supabase está disponible
+        function checkSupabaseAvailability() {
+            const debugDiv = document.getElementById('debug-info');
+            debugDiv.style.display = 'block';
+            
+            let debugInfo = [];
+            debugInfo.push(`🔍 Verificando entorno del navegador...`);
+            debugInfo.push(`- Navigator: ${navigator.userAgent.substring(0, 50)}...`);
+            debugInfo.push(`- URL actual: ${window.location.href}`);
+            
+            // Verificar si Supabase está definido
+            if (typeof Supabase === 'undefined') {
+                debugInfo.push(`❌ ERROR: Supabase no está definido`);
+                debugInfo.push(`- Posible causa: Extensión del navegador bloqueando el CDN`);
+                debugInfo.push(`- Solución: Prueba en modo incógnito o deshabilita extensiones`);
+                debugDiv.innerHTML = debugInfo.join('<br>');
+                return false;
+            }
+            
+            debugInfo.push(`✅ Supabase está disponible`);
+            debugInfo.push(`- Versión: ${Supabase.version || 'desconocida'}`);
+            debugDiv.innerHTML = debugInfo.join('<br>');
+            return true;
+        }
+
         // --- CONFIGURACIÓN DE SUPABASE ---
         const SUPABASE_URL = 'https://irhcudgyudmwwoamtwoo.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyaGN1ZGd5dWRtd3dvYW10d29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2ODQyMjksImV4cCI6MjA2NzI2MDIyOX0.kDQRr5H3jsBabERN2blVRAiGOaU4E2TnikYp19wOv28';
 
-        const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabase = null;
+
+        // Función para inicializar Supabase de forma segura
+        function initializeSupabase() {
+            try {
+                if (typeof Supabase === 'undefined') {
+                    throw new Error('Supabase library not loaded');
+                }
+                supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                return true;
+            } catch (error) {
+                console.error('Error inicializando Supabase:', error);
+                return false;
+            }
+        }
 
         // Función para verificar la conexión
         async function testConnection() {
             const statusDiv = document.getElementById('connection-status');
+            const debugDiv = document.getElementById('debug-info');
+            
             try {
-                // Intentar una consulta simple para verificar la conexión
+                // Verificar si Supabase está disponible
+                if (!checkSupabaseAvailability()) {
+                    statusDiv.className = 'connection-status connection-error';
+                    statusDiv.innerHTML = `
+                        ❌ Supabase no disponible - Extensión del navegador interfiriendo<br>
+                        <small>Prueba en modo incógnito o deshabilita extensiones</small>
+                    `;
+                    return false;
+                }
+
+                // Inicializar Supabase
+                if (!initializeSupabase()) {
+                    statusDiv.className = 'connection-status connection-error';
+                    statusDiv.textContent = '❌ Error al inicializar Supabase';
+                    return false;
+                }
+
+                statusDiv.textContent = '🔄 Probando conexión con Supabase...';
+                
+                // Intentar una consulta simple
                 const { data, error } = await supabase
                     .from('business_domains')
                     .select('count(*)')
@@ -172,10 +239,20 @@
                 
                 statusDiv.className = 'connection-status connection-success';
                 statusDiv.textContent = '✅ Conexión exitosa con Supabase';
+                debugDiv.style.display = 'none'; // Ocultar debug si todo está bien
                 return true;
+
             } catch (error) {
                 statusDiv.className = 'connection-status connection-error';
-                statusDiv.textContent = `❌ Error de conexión: ${error.message}`;
+                statusDiv.innerHTML = `
+                    ❌ Error de conexión: ${error.message}<br>
+                    <small>Código: ${error.code || 'desconocido'}</small>
+                `;
+                
+                // Añadir información de debug
+                const debugInfo = debugDiv.innerHTML + `<br>❌ Error de conexión: ${error.message}`;
+                debugDiv.innerHTML = debugInfo;
+                
                 console.error('Error de conexión:', error);
                 return false;
             }
@@ -216,6 +293,11 @@
             const domainsList = document.getElementById('domains-list');
             const domainsSummary = document.getElementById('domains-summary');
             
+            if (!supabase) {
+                showError('domains-summary', 'Supabase no está inicializado');
+                return;
+            }
+            
             try {
                 domainsSummary.textContent = 'Cargando dominios...';
                 
@@ -255,6 +337,11 @@
         async function fetchProjects() {
             const projectsList = document.getElementById('projects-list');
             const projectsSummary = document.getElementById('projects-summary');
+            
+            if (!supabase) {
+                showError('projects-summary', 'Supabase no está inicializado');
+                return;
+            }
             
             try {
                 projectsSummary.textContent = 'Cargando proyectos...';
@@ -302,6 +389,11 @@
             const tasksList = document.getElementById('tasks-list');
             const tasksSummary = document.getElementById('tasks-summary');
             
+            if (!supabase) {
+                showError('tasks-summary', 'Supabase no está inicializado');
+                return;
+            }
+            
             try {
                 tasksSummary.textContent = 'Cargando tareas...';
                 
@@ -345,6 +437,11 @@
         async function fetchActionPlans() {
             const actionPlansList = document.getElementById('action-plans-list');
             const actionPlansSummary = document.getElementById('action-plans-summary');
+            
+            if (!supabase) {
+                showError('action-plans-summary', 'Supabase no está inicializado');
+                return;
+            }
             
             try {
                 actionPlansSummary.textContent = 'Cargando planes de acción...';
