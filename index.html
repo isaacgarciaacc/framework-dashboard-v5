@@ -79,6 +79,31 @@
             padding: 20px;
             font-style: italic;
         }
+        .error-state {
+            text-align: center;
+            color: #dc3545;
+            padding: 20px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .connection-status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .connection-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .connection-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
@@ -86,6 +111,7 @@
         <header>
             <h1>Dashboard de Gestión Centralizada</h1>
             <p>Visibilidad en tiempo real de dominios, proyectos, tareas y actividades.</p>
+            <div id="connection-status" class="connection-status">Verificando conexión...</div>
         </header>
 
         <div class="dashboard-grid">
@@ -113,7 +139,6 @@
                 </ul>
             </div>
 
-            <!-- Puedes añadir más tarjetas para otras visualizaciones, como Actividades (Action Plans) -->
             <div class="card" id="action-plans-card">
                 <h2>Planes de Acción Recientes</h2>
                 <div id="action-plans-summary" class="empty-state">Cargando planes de acción...</div>
@@ -126,13 +151,41 @@
 
     <script>
         // --- CONFIGURACIÓN DE SUPABASE ---
-        // ¡IMPORTANTE! Reemplaza con tu URL de Supabase y tu clave anon
         const SUPABASE_URL = 'https://irhcudgyudmwwoamtwoo.supabase.co';
-        
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyaGN1ZGd5dWRtd3dvYW10d29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2ODQyMjksImV4cCI6MjA2NzI2MDIyOX0.kDQRr5H3jsBabERN2blVRAiGOaU4E2TnikYp19wOv28';
 
         const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        // --- FIN CONFIGURACIÓN DE SUPABASE ---
+
+        // Función para verificar la conexión
+        async function testConnection() {
+            const statusDiv = document.getElementById('connection-status');
+            try {
+                // Intentar una consulta simple para verificar la conexión
+                const { data, error } = await supabase
+                    .from('business_domains')
+                    .select('count(*)')
+                    .limit(1);
+                
+                if (error) {
+                    throw error;
+                }
+                
+                statusDiv.className = 'connection-status connection-success';
+                statusDiv.textContent = '✅ Conexión exitosa con Supabase';
+                return true;
+            } catch (error) {
+                statusDiv.className = 'connection-status connection-error';
+                statusDiv.textContent = `❌ Error de conexión: ${error.message}`;
+                console.error('Error de conexión:', error);
+                return false;
+            }
+        }
+
+        // Helper para mostrar errores
+        function showError(elementId, errorMessage) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="error-state">❌ ${errorMessage}</div>`;
+        }
 
         // Helper para aplicar clases de estado
         function getStatusClass(status) {
@@ -141,8 +194,8 @@
                 case 'in_progress': return 'status-in_progress';
                 case 'completed': return 'status-completed';
                 case 'planning': return 'status-planning';
-                case 'on_hold': return 'status-in_progress'; // Puedes ajustar este para un color diferente
-                case 'not_started': return 'status-in_progress'; // o crear una clase 'status-not_started'
+                case 'on_hold': return 'status-in_progress';
+                case 'not_started': return 'status-in_progress';
                 default: return '';
             }
         }
@@ -162,172 +215,197 @@
         async function fetchDomains() {
             const domainsList = document.getElementById('domains-list');
             const domainsSummary = document.getElementById('domains-summary');
-            domainsSummary.textContent = 'Cargando dominios...';
+            
             try {
-                // Consulta de ejemplo para la tabla 'business_domains'
+                domainsSummary.textContent = 'Cargando dominios...';
+                
                 const { data: domains, error } = await supabase
                     .from('business_domains')
-                    .select('code, name, description, is_active')
-                    .eq('is_active', true); // Solo dominios activos
+                    .select('code, name, description, is_active');
 
-                if (error) throw error;
+                if (error) {
+                    throw error;
+                }
 
-                domainsList.innerHTML = ''; // Limpiar la lista existente
+                domainsList.innerHTML = '';
 
-                if (domains.length > 0) {
-                    domainsSummary.textContent = `Total de dominios activos: ${domains.length}`;
+                if (domains && domains.length > 0) {
+                    const activeCount = domains.filter(d => d.is_active).length;
+                    domainsSummary.textContent = `Total de dominios: ${domains.length} (${activeCount} activos)`;
+                    
                     domains.forEach(domain => {
                         const listItem = document.createElement('li');
+                        const activeStatus = domain.is_active ? '🟢 Activo' : '🔴 Inactivo';
                         listItem.innerHTML = `
-                            <strong>${domain.name} (${domain.code})</strong>
+                            <strong>${domain.name || 'Sin nombre'} (${domain.code || 'Sin código'})</strong> ${activeStatus}
                             <br>${domain.description || 'Sin descripción.'}
                         `;
                         domainsList.appendChild(listItem);
                     });
                 } else {
-                    domainsSummary.textContent = 'No hay dominios activos disponibles.';
+                    domainsSummary.textContent = 'No hay dominios disponibles.';
                 }
 
             } catch (error) {
-                console.error('Error al cargar los dominios:', error.message);
-                domainsSummary.textContent = 'Error al cargar los dominios.';
+                console.error('Error al cargar dominios:', error);
+                showError('domains-summary', `Error al cargar dominios: ${error.message}`);
             }
         }
 
         async function fetchProjects() {
             const projectsList = document.getElementById('projects-list');
             const projectsSummary = document.getElementById('projects-summary');
-            projectsSummary.textContent = 'Cargando proyectos...';
+            
             try {
-                // Consulta de ejemplo para la tabla 'projects'
+                projectsSummary.textContent = 'Cargando proyectos...';
+                
                 const { data: projects, error } = await supabase
                     .from('projects')
                     .select('name, status, progress_percentage, start_date, target_date, priority')
-                    .in('status', ['active', 'planning', 'on_hold']) // Proyectos relevantes para un dashboard
-                    .order('priority', { ascending: false })
                     .order('name', { ascending: true });
 
-                if (error) throw error;
+                if (error) {
+                    throw error;
+                }
 
-                projectsList.innerHTML = ''; // Limpiar la lista existente
+                projectsList.innerHTML = '';
 
-                if (projects.length > 0) {
+                if (projects && projects.length > 0) {
                     const activeCount = projects.filter(p => p.status === 'active').length;
                     const planningCount = projects.filter(p => p.status === 'planning').length;
-                    projectsSummary.textContent = `Proyectos: ${activeCount} activos, ${planningCount} en planificación.`;
+                    projectsSummary.textContent = `Proyectos: ${projects.length} total, ${activeCount} activos, ${planningCount} en planificación`;
 
                     projects.forEach(project => {
                         const listItem = document.createElement('li');
                         const statusClass = getStatusClass(project.status);
                         const priorityClass = getPriorityClass(project.priority);
                         listItem.innerHTML = `
-                            <strong>${project.name}</strong>
-                            <span class="${statusClass}">(${project.status.replace('_', ' ').charAt(0).toUpperCase() + project.status.replace('_', ' ').slice(1)})</span>
-                            <span class="${priorityClass}">Prioridad: ${project.priority.charAt(0).toUpperCase() + project.priority.slice(1)}</span>
+                            <strong>${project.name || 'Sin nombre'}</strong>
+                            <span class="${statusClass}">(${(project.status || 'sin estado').replace('_', ' ').charAt(0).toUpperCase() + (project.status || 'sin estado').replace('_', ' ').slice(1)})</span>
+                            <span class="${priorityClass}">Prioridad: ${(project.priority || 'normal').charAt(0).toUpperCase() + (project.priority || 'normal').slice(1)}</span>
                             <br>Progreso: ${project.progress_percentage || 0}%
                             ${project.target_date ? `<br>Fecha Objetivo: ${new Date(project.target_date).toLocaleDateString()}` : ''}
                         `;
                         projectsList.appendChild(listItem);
                     });
                 } else {
-                    projectsSummary.textContent = 'No hay proyectos activos, en planificación o en pausa.';
+                    projectsSummary.textContent = 'No hay proyectos disponibles.';
                 }
 
             } catch (error) {
-                console.error('Error al cargar los proyectos:', error.message);
-                projectsSummary.textContent = 'Error al cargar los proyectos.';
+                console.error('Error al cargar proyectos:', error);
+                showError('projects-summary', `Error al cargar proyectos: ${error.message}`);
             }
         }
 
         async function fetchPersonalTasks() {
             const tasksList = document.getElementById('tasks-list');
             const tasksSummary = document.getElementById('tasks-summary');
-            tasksSummary.textContent = 'Cargando tareas...';
+            
             try {
-                // Consulta de ejemplo para la tabla 'personal_tasks'
+                tasksSummary.textContent = 'Cargando tareas...';
+                
                 const { data: tasks, error } = await supabase
                     .from('personal_tasks')
                     .select('title, status, priority, due_date')
-                    .in('status', ['not_started', 'in_progress', 'waiting_on_others'])
-                    .order('priority', { ascending: false })
                     .order('due_date', { ascending: true, nullsFirst: false });
 
-                if (error) throw error;
+                if (error) {
+                    throw error;
+                }
 
-                tasksList.innerHTML = ''; // Limpiar la lista existente
+                tasksList.innerHTML = '';
 
-                if (tasks.length > 0) {
+                if (tasks && tasks.length > 0) {
                     const pendingCount = tasks.filter(t => t.status !== 'completed').length;
-                    tasksSummary.textContent = `Tienes ${pendingCount} tareas pendientes.`;
+                    tasksSummary.textContent = `Tareas: ${tasks.length} total, ${pendingCount} pendientes`;
+                    
                     tasks.forEach(task => {
                         const listItem = document.createElement('li');
                         const statusClass = getStatusClass(task.status);
                         const priorityClass = getPriorityClass(task.priority);
                         listItem.innerHTML = `
-                            <strong>${task.title}</strong>
-                            <span class="${statusClass}">(${task.status.replace('_', ' ').charAt(0).toUpperCase() + task.status.replace('_', ' ').slice(1)})</span>
-                            <span class="${priorityClass}">Prioridad: ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}</span>
+                            <strong>${task.title || 'Sin título'}</strong>
+                            <span class="${statusClass}">(${(task.status || 'sin estado').replace('_', ' ').charAt(0).toUpperCase() + (task.status || 'sin estado').replace('_', ' ').slice(1)})</span>
+                            <span class="${priorityClass}">Prioridad: ${(task.priority || 'normal').charAt(0).toUpperCase() + (task.priority || 'normal').slice(1)}</span>
                             ${task.due_date ? `<br>Vence: ${new Date(task.due_date).toLocaleDateString()}` : ''}
                         `;
                         tasksList.appendChild(listItem);
                     });
                 } else {
-                    tasksSummary.textContent = 'No hay tareas pendientes o en progreso en este momento.';
+                    tasksSummary.textContent = 'No hay tareas disponibles.';
                 }
 
             } catch (error) {
-                console.error('Error al cargar las tareas:', error.message);
-                tasksSummary.textContent = 'Error al cargar las tareas.';
+                console.error('Error al cargar tareas:', error);
+                showError('tasks-summary', `Error al cargar tareas: ${error.message}`);
             }
         }
 
         async function fetchActionPlans() {
             const actionPlansList = document.getElementById('action-plans-list');
             const actionPlansSummary = document.getElementById('action-plans-summary');
-            actionPlansSummary.textContent = 'Cargando planes de acción...';
+            
             try {
-                // Consulta de ejemplo para la tabla 'action_plans'
+                actionPlansSummary.textContent = 'Cargando planes de acción...';
+                
                 const { data: plans, error } = await supabase
                     .from('action_plans')
                     .select('user_request, status, priority, created_at')
-                    .in('status', ['pending', 'in_progress'])
                     .order('created_at', { ascending: false })
-                    .limit(5); // Mostrar los 5 planes de acción más recientes/pendientes
+                    .limit(10);
 
-                if (error) throw error;
+                if (error) {
+                    throw error;
+                }
 
-                actionPlansList.innerHTML = ''; // Limpiar la lista existente
+                actionPlansList.innerHTML = '';
 
-                if (plans.length > 0) {
-                    actionPlansSummary.textContent = `Mostrando ${plans.length} planes de acción recientes.`;
+                if (plans && plans.length > 0) {
+                    actionPlansSummary.textContent = `Mostrando ${plans.length} planes de acción recientes`;
+                    
                     plans.forEach(plan => {
                         const listItem = document.createElement('li');
                         const statusClass = getStatusClass(plan.status);
                         const priorityClass = getPriorityClass(plan.priority);
                         listItem.innerHTML = `
-                            <strong>${plan.user_request}</strong>
-                            <span class="${statusClass}">(${plan.status.replace('_', ' ').charAt(0).toUpperCase() + plan.status.replace('_', ' ').slice(1)})</span>
-                            <span class="${priorityClass}">Prioridad: ${plan.priority}</span>
+                            <strong>${plan.user_request || 'Sin descripción'}</strong>
+                            <span class="${statusClass}">(${(plan.status || 'sin estado').replace('_', ' ').charAt(0).toUpperCase() + (plan.status || 'sin estado').replace('_', ' ').slice(1)})</span>
+                            <span class="${priorityClass}">Prioridad: ${plan.priority || 'normal'}</span>
                             <br>Creación: ${new Date(plan.created_at).toLocaleDateString()}
                         `;
                         actionPlansList.appendChild(listItem);
                     });
                 } else {
-                    actionPlansSummary.textContent = 'No hay planes de acción pendientes o en progreso.';
+                    actionPlansSummary.textContent = 'No hay planes de acción disponibles.';
                 }
 
             } catch (error) {
-                console.error('Error al cargar los planes de acción:', error.message);
-                actionPlansSummary.textContent = 'Error al cargar los planes de acción.';
+                console.error('Error al cargar planes de acción:', error);
+                showError('action-plans-summary', `Error al cargar planes de acción: ${error.message}`);
             }
         }
 
-        // --- INICIO DE CARGA DE DATOS AL CARGAR LA PÁGINA ---
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchDomains();
-            fetchProjects();
-            fetchPersonalTasks();
-            fetchActionPlans();
+        // --- INICIO DE CARGA DE DATOS ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Verificar conexión primero
+            const connectionOk = await testConnection();
+            
+            if (connectionOk) {
+                // Cargar datos en paralelo
+                await Promise.all([
+                    fetchDomains(),
+                    fetchProjects(),
+                    fetchPersonalTasks(),
+                    fetchActionPlans()
+                ]);
+            } else {
+                // Mostrar mensaje de error en todas las secciones
+                showError('domains-summary', 'No se pudo conectar a la base de datos');
+                showError('projects-summary', 'No se pudo conectar a la base de datos');
+                showError('tasks-summary', 'No se pudo conectar a la base de datos');
+                showError('action-plans-summary', 'No se pudo conectar a la base de datos');
+            }
         });
     </script>
 </body>
