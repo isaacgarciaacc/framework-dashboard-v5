@@ -202,6 +202,8 @@
     history: "tot.history"
   };
 
+  const DEFAULT_WEBHOOK = "https://metatron.aircraftcare.net/webhook/bf4dd093-bb02-472c-9454-7ab9af97bd1d";
+
   function uuidv4(){
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>
       (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c/4).toString(16)
@@ -209,11 +211,15 @@
   }
 
   function getConfig(){
-    return {
-      baseUrl: localStorage.getItem(STORAGE_KEYS.baseUrl) ?? "",
-      path: localStorage.getItem(STORAGE_KEYS.path) ?? "",
-      headers: safeParse(localStorage.getItem(STORAGE_KEYS.headers)) ?? {}
-    };
+    const baseUrlStored = localStorage.getItem(STORAGE_KEYS.baseUrl) ?? "";
+    const pathStored    = localStorage.getItem(STORAGE_KEYS.path) ?? "";
+    const headers       = safeParse(localStorage.getItem(STORAGE_KEYS.headers)) ?? {};
+  
+    // Si no hay nada guardado, usar el endpoint por defecto
+    if (!baseUrlStored && !pathStored) {
+      return { baseUrl: "", path: DEFAULT_WEBHOOK, headers };
+    }
+    return { baseUrl: baseUrlStored, path: pathStored, headers };
   }
 
   function setConfig({baseUrl, path, headers}){
