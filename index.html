@@ -1,509 +1,441 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Gestión Empresarial v1.2 (Extensión-Safe)</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #eef1f5;
-            color: #333;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        header {
-            background-color: #0056b3;
-            color: #ffffff;
-            padding: 20px;
-            border-radius: 8px 8px 0 0;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-        .card h2 {
-            color: #0056b3;
-            margin-top: 0;
-            font-size: 1.5em;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        .card ul {
-            list-style: none;
-            padding: 0;
-        }
-        .card li {
-            padding: 8px 0;
-            border-bottom: 1px dashed #e9ecef;
-        }
-        .card li:last-child {
-            border-bottom: none;
-        }
-        .status-active { color: #28a745; font-weight: bold; }
-        .status-in_progress { color: #ffc107; font-weight: bold; }
-        .status-completed { color: #6c757d; font-weight: bold; }
-        .status-planning { color: #007bff; font-weight: bold; }
-        .priority-high { color: #dc3545; font-weight: bold; }
-        .priority-normal { color: #007bff; font-weight: bold; }
-        .priority-low { color: #6c757d; font-weight: bold; }
-
-        .empty-state {
-            text-align: center;
-            color: #6c757d;
-            padding: 20px;
-            font-style: italic;
-        }
-        .error-state {
-            text-align: center;
-            color: #dc3545;
-            padding: 20px;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-            margin: 10px 0;
-        }
-        .connection-status {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            text-align: center;
-        }
-        .connection-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .connection-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .connection-warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-        .debug-info {
-            background-color: #e2e3e5;
-            border: 1px solid #d6d8db;
-            border-radius: 4px;
-            padding: 10px;
-            margin: 10px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chat · TOT Agent</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#0f141a; --panel-2:#121821; --text:#e7ecf3;
+    --muted:#9fb0c3; --accent:#4da3ff; --accent-2:#7bd389; --danger:#ff6b6b;
+    --border:#1d2430; --bubble-user:#1b2838; --bubble-bot:#101923;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:radial-gradient(1200px 800px at 90% -10%, #122033 0%, #0b0f14 60%), var(--bg);
+    color:var(--text); font:400 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  }
+  .app{
+    max-width:900px; margin:0 auto; min-height:100%;
+    display:flex; flex-direction:column; gap:0;
+  }
+  header{
+    position:sticky; top:0; z-index:10;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 16px; background:linear-gradient(180deg, rgba(15,20,26,.9), rgba(15,20,26,.65));
+    backdrop-filter: blur(12px); border-bottom:1px solid var(--border);
+  }
+  .brand{display:flex; align-items:center; gap:12px}
+  .logo{
+    width:36px; height:36px; border-radius:50%;
+    background: conic-gradient(from 220deg, #4da3ff, #7bd389, #c48bff, #4da3ff);
+    box-shadow: 0 0 0 3px rgba(77,163,255,.12), 0 0 0 8px rgba(123,211,137,.07);
+  }
+  .brand h1{margin:0; font-size:16px; letter-spacing:.2px; font-weight:600}
+  .actions{display:flex; gap:8px}
+  button, .btn{
+    appearance:none; border:1px solid var(--border); background:var(--panel-2); color:var(--text);
+    padding:10px 12px; border-radius:12px; cursor:pointer;
+    transition:transform .08s ease, background .2s ease, border-color .2s ease, opacity .2s;
+  }
+  button:hover{border-color:#2a3444; background:#0f1722}
+  button:active{transform:translateY(1px)}
+  .btn-outline{background:transparent}
+  .btn-accent{background:linear-gradient(180deg,#1d344e,#142234); border-color:#24415f}
+  .btn-accent:hover{border-color:#315a81}
+  .muted{color:var(--muted)}
+  main{
+    flex:1; display:flex; flex-direction:column; gap:0;
+    padding:16px; scroll-behavior:smooth;
+  }
+  .stream{
+    flex:1; overflow:auto; display:flex; flex-direction:column; gap:14px; padding-bottom:8px;
+  }
+  .row{display:flex; gap:10px; align-items:flex-end;}
+  .row.user{justify-content:flex-end}
+  .avatar{
+    width:28px; height:28px; border-radius:50%;
+    background:#0f1b2a; border:1px solid var(--border); flex:none;
+  }
+  .avatar.bot{background:#0d1a12}
+  .bubble{
+    max-width:min(680px, 85%); padding:12px 14px; border-radius:14px;
+    border:1px solid var(--border); box-shadow: var(--shadow);
+    background:var(--bubble-bot); color:var(--text); white-space:pre-wrap; word-wrap:break-word;
+  }
+  .row.user .bubble{background:var(--bubble-user)}
+  .meta{font-size:12px; color:var(--muted); margin-top:6px}
+  .inputbar{
+    position:sticky; bottom:0; z-index:10; padding:12px 16px; background:linear-gradient(0deg, rgba(15,20,26,.92), rgba(15,20,26,.75));
+    border-top:1px solid var(--border); backdrop-filter: blur(8px);
+  }
+  .composer{
+    display:flex; align-items:flex-end; gap:10px; background:var(--panel); border:1px solid var(--border);
+    border-radius:16px; padding:10px; box-shadow: var(--shadow);
+  }
+  textarea{
+    flex:1; resize:none; min-height:44px; max-height:170px; border:0; outline:0; background:transparent; color:var(--text);
+  }
+  .send{display:flex; gap:8px}
+  .chip{
+    font-size:12px; padding:6px 8px; border-radius:999px; border:1px solid var(--border);
+    background:rgba(77,163,255,.1); color:#b6d8ff;
+  }
+  .toast{
+    position:fixed; right:16px; bottom:16px; background:#1b0f12; color:#ffd7df; border:1px solid #4b1823;
+    padding:10px 12px; border-radius:10px; box-shadow: var(--shadow); display:none;
+  }
+  .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; padding:.5px 6px; border:1px solid var(--border); border-radius:6px; color:var(--muted)}
+  /* Modal */
+  dialog{
+    border:1px solid var(--border); border-radius:16px; background:var(--panel); color:var(--text);
+    padding:0; box-shadow: var(--shadow); width:min(720px, 92vw);
+  }
+  dialog::backdrop{background:rgba(0,0,0,.45)}
+  .modal-head{display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid var(--border)}
+  .modal-body{padding:16px; display:grid; gap:12px}
+  .field{display:grid; gap:6px}
+  .field label{font-size:13px; color:var(--muted)}
+  .field input{
+    width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--border);
+    background:var(--panel-2); color:var(--text);
+  }
+  .modal-actions{display:flex; justify-content:flex-end; gap:8px; padding:14px 16px; border-top:1px solid var(--border)}
+  .hint{font-size:12px; color:var(--muted)}
+  @media (max-width:520px){
+    header{padding:12px}
+    .brand h1{font-size:15px}
+    .composer{padding:8px}
+    .actions .chip{display:none}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Dashboard de Gestión Centralizada v1.2</h1>
-            <p>Visibilidad en tiempo real de dominios, proyectos, tareas y actividades.</p>
-            <div id="connection-status" class="connection-status">Verificando conexión...</div>
-            <div id="debug-info" class="debug-info" style="display: none;"></div>
-        </header>
-
-        <div class="dashboard-grid">
-            <div class="card" id="domains-card">
-                <h2>Dominios de Negocio</h2>
-                <div id="domains-summary" class="empty-state">Esperando verificación de conexión...</div>
-                <ul id="domains-list"></ul>
-            </div>
-
-            <div class="card" id="projects-card">
-                <h2>Proyectos Actuales</h2>
-                <div id="projects-summary" class="empty-state">Esperando verificación de conexión...</div>
-                <ul id="projects-list"></ul>
-            </div>
-
-            <div class="card" id="tasks-card">
-                <h2>Tareas Pendientes</h2>
-                <div id="tasks-summary" class="empty-state">Esperando verificación de conexión...</div>
-                <ul id="tasks-list"></ul>
-            </div>
-
-            <div class="card" id="action-plans-card">
-                <h2>Planes de Acción Recientes</h2>
-                <div id="action-plans-summary" class="empty-state">Esperando verificación de conexión...</div>
-                <ul id="action-plans-list"></ul>
-            </div>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Chat con TOT</h1>
+          <div class="muted" style="font-size:12px">RAG · n8n Webhook · GitHub Pages</div>
         </div>
+      </div>
+      <div class="actions">
+        <span id="sessionChip" class="chip" title="Session ID para memoria">Sesión: —</span>
+        <button id="newSessionBtn" class="btn btn-outline" title="Regenerar Session ID">↻ Sesión</button>
+        <button id="configBtn" class="btn btn-accent" title="Configurar webhook">⚙︎ Configurar</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="stream" class="stream" aria-live="polite" aria-busy="false"></div>
+    </main>
+
+    <div class="inputbar">
+      <div class="composer">
+        <textarea id="input" placeholder="Escribe tu mensaje… (Enter para enviar, Shift+Enter salto de línea)" rows="1"></textarea>
+        <div class="send">
+          <button id="sendBtn" class="btn btn-accent">Enviar ▷</button>
+        </div>
+      </div>
+      <div class="hint" style="margin-top:8px">
+        Consejo: presiona <span class="kbd">Enter</span> para enviar · <span class="kbd">Shift</span> + <span class="kbd">Enter</span> para saltar línea
+      </div>
     </div>
+  </div>
 
-    <script>
-        // Función para verificar si Supabase está disponible
-        function checkSupabaseAvailability() {
-            const debugDiv = document.getElementById('debug-info');
-            debugDiv.style.display = 'block';
-            
-            let debugInfo = [];
-            debugInfo.push(`🔍 Verificando entorno del navegador...`);
-            debugInfo.push(`- Navigator: ${navigator.userAgent.substring(0, 50)}...`);
-            debugInfo.push(`- URL actual: ${window.location.href}`);
-            
-            // Verificar si Supabase está definido
-            if (typeof Supabase === 'undefined') {
-                debugInfo.push(`❌ ERROR: Supabase no está definido`);
-                debugInfo.push(`- Posible causa: Extensión del navegador bloqueando el CDN`);
-                debugInfo.push(`- Solución: Prueba en modo incógnito o deshabilita extensiones`);
-                debugDiv.innerHTML = debugInfo.join('<br>');
-                return false;
-            }
-            
-            debugInfo.push(`✅ Supabase está disponible`);
-            debugInfo.push(`- Versión: ${Supabase.version || 'desconocida'}`);
-            debugDiv.innerHTML = debugInfo.join('<br>');
-            return true;
-        }
+  <dialog id="configModal">
+    <div class="modal-head">
+      <strong>Configuración de endpoint</strong>
+      <button id="closeConfig" class="btn btn-outline">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label for="baseUrl">Base URL del Webhook (sin la parte /webhook/… si ya la incluyes completa)</label>
+        <input id="baseUrl" placeholder="https://TU-DOMINIO-N8N/webhook" />
+      </div>
+      <div class="field">
+        <label for="path">Path del Webhook (si tu Base URL ya incluye /webhook/ID, deja esto vacío)</label>
+        <input id="path" placeholder="bf4dd093-bb02-472c-9454-7ab9af97bd1d" />
+      </div>
+      <div class="field">
+        <label for="headers">Headers opcionales (JSON)</label>
+        <input id="headers" placeholder='{"Authorization":"Bearer ..."}' />
+      </div>
+      <div class="hint">
+        Este chat hace <code>POST</code> con <code>{ "chatInput": "...", "sessionId": "..." }</code> y muestra la respuesta del nodo <em>Respond to Webhook</em>.
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button id="saveConfig" class="btn btn-accent">Guardar</button>
+    </div>
+  </dialog>
 
-        // --- CONFIGURACIÓN DE SUPABASE ---
-        const SUPABASE_URL = 'https://irhcudgyudmwwoamtwoo.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyaGN1ZGd5dWRtd3dvYW10d29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2ODQyMjksImV4cCI6MjA2NzI2MDIyOX0.kDQRr5H3jsBabERN2blVRAiGOaU4E2TnikYp19wOv28';
+  <div id="toast" class="toast" role="status"></div>
 
-        let supabase = null;
+<script>
+(() => {
+  // ------- State & Storage -------
+  const $ = sel => document.querySelector(sel);
+  const stream = $("#stream");
+  const input = $("#input");
+  const sendBtn = $("#sendBtn");
+  const configBtn = $("#configBtn");
+  const configModal = $("#configModal");
+  const closeConfig = $("#closeConfig");
+  const saveConfig = $("#saveConfig");
+  const baseUrlEl = $("#baseUrl");
+  const pathEl = $("#path");
+  const headersEl = $("#headers");
+  const sessionChip = $("#sessionChip");
+  const newSessionBtn = $("#newSessionBtn");
+  const toast = $("#toast");
 
-        // Función para inicializar Supabase de forma segura
-        function initializeSupabase() {
-            try {
-                if (typeof Supabase === 'undefined') {
-                    throw new Error('Supabase library not loaded');
-                }
-                supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                return true;
-            } catch (error) {
-                console.error('Error inicializando Supabase:', error);
-                return false;
-            }
-        }
+  const STORAGE_KEYS = {
+    baseUrl: "tot.baseUrl",
+    path: "tot.path",
+    headers: "tot.headers",
+    sessionId: "tot.sessionId",
+    history: "tot.history"
+  };
 
-        // Función para verificar la conexión
-        async function testConnection() {
-            const statusDiv = document.getElementById('connection-status');
-            const debugDiv = document.getElementById('debug-info');
-            
-            try {
-                // Verificar si Supabase está disponible
-                if (!checkSupabaseAvailability()) {
-                    statusDiv.className = 'connection-status connection-error';
-                    statusDiv.innerHTML = `
-                        ❌ Supabase no disponible - Extensión del navegador interfiriendo<br>
-                        <small>Prueba en modo incógnito o deshabilita extensiones</small>
-                    `;
-                    return false;
-                }
+  function uuidv4(){
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c/4).toString(16)
+    );
+  }
 
-                // Inicializar Supabase
-                if (!initializeSupabase()) {
-                    statusDiv.className = 'connection-status connection-error';
-                    statusDiv.textContent = '❌ Error al inicializar Supabase';
-                    return false;
-                }
+  function getConfig(){
+    return {
+      baseUrl: localStorage.getItem(STORAGE_KEYS.baseUrl) ?? "",
+      path: localStorage.getItem(STORAGE_KEYS.path) ?? "",
+      headers: safeParse(localStorage.getItem(STORAGE_KEYS.headers)) ?? {}
+    };
+  }
 
-                statusDiv.textContent = '🔄 Probando conexión con Supabase...';
-                
-                // Intentar una consulta simple
-                const { data, error } = await supabase
-                    .from('business_domains')
-                    .select('count(*)')
-                    .limit(1);
-                
-                if (error) {
-                    throw error;
-                }
-                
-                statusDiv.className = 'connection-status connection-success';
-                statusDiv.textContent = '✅ Conexión exitosa con Supabase';
-                debugDiv.style.display = 'none'; // Ocultar debug si todo está bien
-                return true;
+  function setConfig({baseUrl, path, headers}){
+    if (typeof baseUrl === "string") localStorage.setItem(STORAGE_KEYS.baseUrl, baseUrl.trim());
+    if (typeof path === "string") localStorage.setItem(STORAGE_KEYS.path, path.trim());
+    if (headers && typeof headers === "object") localStorage.setItem(STORAGE_KEYS.headers, JSON.stringify(headers));
+    loadConfigIntoModal();
+  }
 
-            } catch (error) {
-                statusDiv.className = 'connection-status connection-error';
-                statusDiv.innerHTML = `
-                    ❌ Error de conexión: ${error.message}<br>
-                    <small>Código: ${error.code || 'desconocido'}</small>
-                `;
-                
-                // Añadir información de debug
-                const debugInfo = debugDiv.innerHTML + `<br>❌ Error de conexión: ${error.message}`;
-                debugDiv.innerHTML = debugInfo;
-                
-                console.error('Error de conexión:', error);
-                return false;
-            }
-        }
+  function getSession(){
+    let id = localStorage.getItem(STORAGE_KEYS.sessionId);
+    if(!id){ id = uuidv4(); localStorage.setItem(STORAGE_KEYS.sessionId, id); }
+    return id;
+  }
+  function rotateSession(){
+    const id = uuidv4();
+    localStorage.setItem(STORAGE_KEYS.sessionId, id);
+    updateSessionChip();
+    pushSys("Se generó un nuevo Session ID.");
+  }
 
-        // Helper para mostrar errores
-        function showError(elementId, errorMessage) {
-            const element = document.getElementById(elementId);
-            element.innerHTML = `<div class="error-state">❌ ${errorMessage}</div>`;
-        }
+  function updateSessionChip(){
+    const id = getSession();
+    sessionChip.textContent = "Sesión: " + id.slice(0, 8);
+    sessionChip.title = id;
+  }
 
-        // Helper para aplicar clases de estado
-        function getStatusClass(status) {
-            switch(status) {
-                case 'active': return 'status-active';
-                case 'in_progress': return 'status-in_progress';
-                case 'completed': return 'status-completed';
-                case 'planning': return 'status-planning';
-                case 'on_hold': return 'status-in_progress';
-                case 'not_started': return 'status-in_progress';
-                default: return '';
-            }
-        }
+  function safeParse(str){
+    if(!str) return null;
+    try{ return JSON.parse(str); } catch { return null; }
+  }
 
-        // Helper para aplicar clases de prioridad
-        function getPriorityClass(priority) {
-            switch(priority) {
-                case 'high': return 'priority-high';
-                case 'normal': return 'priority-normal';
-                case 'low': return 'priority-low';
-                default: return '';
-            }
-        }
+  function saveHistory(msgs){
+    localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(msgs));
+  }
+  function loadHistory(){
+    return safeParse(localStorage.getItem(STORAGE_KEYS.history)) ?? [];
+  }
 
-        // --- FUNCIONES PARA CARGAR DATOS ---
+  // ------- UI Helpers -------
+  function el(tag, attrs={}, children=[]){
+    const node = document.createElement(tag);
+    for(const [k,v] of Object.entries(attrs)){ 
+      if(k==="class") node.className = v;
+      else if(k.startsWith("on") && typeof v === "function") node.addEventListener(k.substring(2), v);
+      else node.setAttribute(k,v);
+    }
+    children.forEach(ch => {
+      if(typeof ch === "string") node.appendChild(document.createTextNode(ch));
+      else if(ch) node.appendChild(ch);
+    });
+    return node;
+  }
 
-        async function fetchDomains() {
-            const domainsList = document.getElementById('domains-list');
-            const domainsSummary = document.getElementById('domains-summary');
-            
-            if (!supabase) {
-                showError('domains-summary', 'Supabase no está inicializado');
-                return;
-            }
-            
-            try {
-                domainsSummary.textContent = 'Cargando dominios...';
-                
-                const { data: domains, error } = await supabase
-                    .from('business_domains')
-                    .select('code, name, description, is_active');
+  function nowTime(){ 
+    // Simple HH:MM
+    const d = new Date();
+    return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
 
-                if (error) {
-                    throw error;
-                }
+  function pushMsg(role, text, meta = ""){
+    const row = el("div", {class: "row " + (role==="user" ? "user" : "bot")});
+    const avatar = el("div", {class: "avatar " + (role==="bot" ? "bot": "user")});
+    const bubble = el("div", {class:"bubble"}, [text]);
+    const aside = el("div", {class:"meta"}, [meta || nowTime()]);
+    const wrap = el("div");
+    wrap.appendChild(bubble); wrap.appendChild(aside);
+    if(role==="user"){ row.appendChild(wrap); row.appendChild(avatar); }
+    else { row.appendChild(avatar); row.appendChild(wrap); }
+    stream.appendChild(row);
+    stream.scrollTop = stream.scrollHeight;
+    persist();
+  }
 
-                domainsList.innerHTML = '';
+  function pushTyping(){
+    const id = "typing-"+Date.now();
+    const row = el("div", {class:"row bot", id});
+    const avatar = el("div", {class:"avatar bot"});
+    const bubble = el("div", {class:"bubble"}, ["…"]);
+    bubble.style.opacity = .7;
+    row.appendChild(avatar); row.appendChild(el("div", {}, [bubble, el("div",{class:"meta"},["Escribiendo…"])]));
+    stream.appendChild(row);
+    stream.scrollTop = stream.scrollHeight;
+    return id;
+  }
 
-                if (domains && domains.length > 0) {
-                    const activeCount = domains.filter(d => d.is_active).length;
-                    domainsSummary.textContent = `Total de dominios: ${domains.length} (${activeCount} activos)`;
-                    
-                    domains.forEach(domain => {
-                        const listItem = document.createElement('li');
-                        const activeStatus = domain.is_active ? '🟢 Activo' : '🔴 Inactivo';
-                        listItem.innerHTML = `
-                            <strong>${domain.name || 'Sin nombre'} (${domain.code || 'Sin código'})</strong> ${activeStatus}
-                            <br>${domain.description || 'Sin descripción.'}
-                        `;
-                        domainsList.appendChild(listItem);
-                    });
-                } else {
-                    domainsSummary.textContent = 'No hay dominios disponibles.';
-                }
+  function replaceTyping(id, text){
+    const node = document.getElementById(id);
+    if(!node) return;
+    node.remove();
+    pushMsg("bot", text);
+  }
 
-            } catch (error) {
-                console.error('Error al cargar dominios:', error);
-                showError('domains-summary', `Error al cargar dominios: ${error.message}`);
-            }
-        }
+  function pushSys(text){ pushMsg("bot", "ℹ️ " + text); }
 
-        async function fetchProjects() {
-            const projectsList = document.getElementById('projects-list');
-            const projectsSummary = document.getElementById('projects-summary');
-            
-            if (!supabase) {
-                showError('projects-summary', 'Supabase no está inicializado');
-                return;
-            }
-            
-            try {
-                projectsSummary.textContent = 'Cargando proyectos...';
-                
-                const { data: projects, error } = await supabase
-                    .from('projects')
-                    .select('name, status, progress_percentage, start_date, target_date, priority')
-                    .order('name', { ascending: true });
+  function toastShow(msg, ms=3200){
+    toast.textContent = msg;
+    toast.style.display = "block";
+    setTimeout(()=> toast.style.display="none", ms);
+  }
 
-                if (error) {
-                    throw error;
-                }
+  // ------- Modal -------
+  function loadConfigIntoModal(){
+    const {baseUrl, path, headers} = getConfig();
+    baseUrlEl.value = baseUrl;
+    pathEl.value = path;
+    headersEl.value = headers ? JSON.stringify(headers) : "";
+  }
+  function openConfig(){ loadConfigIntoModal(); configModal.showModal(); }
+  function closeConfigModal(){ configModal.close(); }
 
-                projectsList.innerHTML = '';
+  // ------- Persistence of messages -------
+  function persist(){
+    const msgs = [...stream.querySelectorAll(".row")].map(row=>{
+      const role = row.classList.contains("user") ? "user":"bot";
+      const text = row.querySelector(".bubble")?.textContent ?? "";
+      return {role, text};
+    });
+    saveHistory(msgs);
+  }
 
-                if (projects && projects.length > 0) {
-                    const activeCount = projects.filter(p => p.status === 'active').length;
-                    const planningCount = projects.filter(p => p.status === 'planning').length;
-                    projectsSummary.textContent = `Proyectos: ${projects.length} total, ${activeCount} activos, ${planningCount} en planificación`;
+  function restore(){
+    const msgs = loadHistory();
+    if(!msgs.length){
+      pushSys("Configura tu endpoint con ⚙︎ y envía tu primer mensaje.");
+      pushSys("Este cliente manda JSON { chatInput, sessionId } y muestra la respuesta de n8n.");
+      return;
+    }
+    msgs.forEach(m=> pushMsg(m.role, m.text));
+  }
 
-                    projects.forEach(project => {
-                        const listItem = document.createElement('li');
-                        const statusClass = getStatusClass(project.status);
-                        const priorityClass = getPriorityClass(project.priority);
-                        listItem.innerHTML = `
-                            <strong>${project.name || 'Sin nombre'}</strong>
-                            <span class="${statusClass}">(${(project.status || 'sin estado').replace('_', ' ').charAt(0).toUpperCase() + (project.status || 'sin estado').replace('_', ' ').slice(1)})</span>
-                            <span class="${priorityClass}">Prioridad: ${(project.priority || 'normal').charAt(0).toUpperCase() + (project.priority || 'normal').slice(1)}</span>
-                            <br>Progreso: ${project.progress_percentage || 0}%
-                            ${project.target_date ? `<br>Fecha Objetivo: ${new Date(project.target_date).toLocaleDateString()}` : ''}
-                        `;
-                        projectsList.appendChild(listItem);
-                    });
-                } else {
-                    projectsSummary.textContent = 'No hay proyectos disponibles.';
-                }
+  // ------- Networking to n8n -------
+  async function sendToTOT(message){
+    const { baseUrl, path, headers } = getConfig();
+    if(!baseUrl && !path){
+      openConfig();
+      throw new Error("Configura la URL del webhook antes de enviar.");
+    }
 
-            } catch (error) {
-                console.error('Error al cargar proyectos:', error);
-                showError('projects-summary', `Error al cargar proyectos: ${error.message}`);
-            }
-        }
+    // Construye la URL final
+    // Si baseUrl ya incluye /webhook/ID-completo -> úsalo tal cual
+    // Si baseUrl termina en /webhook y hay path -> concatena
+    // Si baseUrl no trae /webhook, permitimos que el usuario haya pegado ya completo (flexible).
+    let url = baseUrl.trim();
+    if(url && path){
+      // Evita dobles slashes
+      url = url.replace(/\/+$/,"") + "/" + path.replace(/^\/+/,"");
+    }
+    if(!url) url = path; // último recurso si pegaron la URL completa en el campo path
 
-        async function fetchPersonalTasks() {
-            const tasksList = document.getElementById('tasks-list');
-            const tasksSummary = document.getElementById('tasks-summary');
-            
-            if (!supabase) {
-                showError('tasks-summary', 'Supabase no está inicializado');
-                return;
-            }
-            
-            try {
-                tasksSummary.textContent = 'Cargando tareas...';
-                
-                const { data: tasks, error } = await supabase
-                    .from('personal_tasks')
-                    .select('title, status, priority, due_date')
-                    .order('due_date', { ascending: true, nullsFirst: false });
+    if(!/^https?:\/\//i.test(url)){
+      throw new Error("La URL del webhook debe empezar con http(s)://");
+    }
 
-                if (error) {
-                    throw error;
-                }
+    const sessionId = getSession();
+    const payload = { chatInput: message, sessionId };
 
-                tasksList.innerHTML = '';
+    const resp = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json",
+        ...(headers || {})
+      },
+      body: JSON.stringify(payload),
+    });
 
-                if (tasks && tasks.length > 0) {
-                    const pendingCount = tasks.filter(t => t.status !== 'completed').length;
-                    tasksSummary.textContent = `Tareas: ${tasks.length} total, ${pendingCount} pendientes`;
-                    
-                    tasks.forEach(task => {
-                        const listItem = document.createElement('li');
-                        const statusClass = getStatusClass(task.status);
-                        const priorityClass = getPriorityClass(task.priority);
-                        listItem.innerHTML = `
-                            <strong>${task.title || 'Sin título'}</strong>
-                            <span class="${statusClass}">(${(task.status || 'sin estado').replace('_', ' ').charAt(0).toUpperCase() + (task.status || 'sin estado').replace('_', ' ').slice(1)})</span>
-                            <span class="${priorityClass}">Prioridad: ${(task.priority || 'normal').charAt(0).toUpperCase() + (task.priority || 'normal').slice(1)}</span>
-                            ${task.due_date ? `<br>Vence: ${new Date(task.due_date).toLocaleDateString()}` : ''}
-                        `;
-                        tasksList.appendChild(listItem);
-                    });
-                } else {
-                    tasksSummary.textContent = 'No hay tareas disponibles.';
-                }
+    const contentType = resp.headers.get("content-type") || "";
+    const raw = await (contentType.includes("application/json") ? resp.json() : resp.text());
 
-            } catch (error) {
-                console.error('Error al cargar tareas:', error);
-                showError('tasks-summary', `Error al cargar tareas: ${error.message}`);
-            }
-        }
+    if(!resp.ok){
+      const body = typeof raw === "string" ? raw : JSON.stringify(raw);
+      throw new Error(`HTTP ${resp.status}: ${body}`);
+    }
 
-        async function fetchActionPlans() {
-            const actionPlansList = document.getElementById('action-plans-list');
-            const actionPlansSummary = document.getElementById('action-plans-summary');
-            
-            if (!supabase) {
-                showError('action-plans-summary', 'Supabase no está inicializado');
-                return;
-            }
-            
-            try {
-                actionPlansSummary.textContent = 'Cargando planes de acción...';
-                
-                const { data: plans, error } = await supabase
-                    .from('action_plans')
-                    .select('user_request, status, priority, created_at')
-                    .order('created_at', { ascending: false })
-                    .limit(10);
+    // Intenta normalizar el texto de salida
+    let answer = "";
+    if (typeof raw === "string") {
+      answer = raw;
+    } else if (raw) {
+      // heurística común
+      answer = raw.text ?? raw.answer ?? raw.message ?? raw.output ?? raw.result ?? JSON.stringify(raw, null, 2);
+    }
+    return String(answer).trim();
+  }
 
-                if (error) {
-                    throw error;
-                }
+  // ------- Events -------
+  sendBtn.addEventListener("click", onSend);
+  input.addEventListener("keydown", (e)=>{
+    if(e.key==="Enter" && !e.shiftKey){
+      e.preventDefault(); onSend();
+    }
+  });
+  configBtn.addEventListener("click", openConfig);
+  closeConfig.addEventListener("click", closeConfigModal);
+  saveConfig.addEventListener("click", ()=>{
+    let headers = safeParse(headersEl.value);
+    if(headersEl.value && !headers){ toastShow("Headers no es JSON válido"); return; }
+    setConfig({ baseUrl: baseUrlEl.value, path: pathEl.value, headers });
+    closeConfigModal(); toastShow("Configuración guardada");
+  });
+  newSessionBtn.addEventListener("click", rotateSession);
 
-                actionPlansList.innerHTML = '';
+  async function onSend(){
+    const text = input.value.trim();
+    if(!text) return;
+    input.value = "";
+    pushMsg("user", text);
+    const typingId = pushTyping();
+    try{
+      const answer = await sendToTOT(text);
+      replaceTyping(typingId, answer || "— (sin contenido)");
+    }catch(err){
+      console.error(err);
+      replaceTyping(typingId, "⚠️ Error al consultar el agente.\n" + (err?.message ?? String(err)));
+      toastShow("Error al consultar el agente");
+    }
+  }
 
-                if (plans && plans.length > 0) {
-                    actionPlansSummary.textContent = `Mostrando ${plans.length} planes de acción recientes`;
-                    
-                    plans.forEach(plan => {
-                        const listItem = document.createElement('li');
-                        const statusClass = getStatusClass(plan.status);
-                        const priorityClass = getPriorityClass(plan.priority);
-                        listItem.innerHTML = `
-                            <strong>${plan.user_request || 'Sin descripción'}</strong>
-                            <span class="${statusClass}">(${(plan.status || 'sin estado').replace('_', ' ').charAt(0).toUpperCase() + (plan.status || 'sin estado').replace('_', ' ').slice(1)})</span>
-                            <span class="${priorityClass}">Prioridad: ${plan.priority || 'normal'}</span>
-                            <br>Creación: ${new Date(plan.created_at).toLocaleDateString()}
-                        `;
-                        actionPlansList.appendChild(listItem);
-                    });
-                } else {
-                    actionPlansSummary.textContent = 'No hay planes de acción disponibles.';
-                }
-
-            } catch (error) {
-                console.error('Error al cargar planes de acción:', error);
-                showError('action-plans-summary', `Error al cargar planes de acción: ${error.message}`);
-            }
-        }
-
-        // --- INICIO DE CARGA DE DATOS ---
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Verificar conexión primero
-            const connectionOk = await testConnection();
-            
-            if (connectionOk) {
-                // Cargar datos en paralelo
-                await Promise.all([
-                    fetchDomains(),
-                    fetchProjects(),
-                    fetchPersonalTasks(),
-                    fetchActionPlans()
-                ]);
-            } else {
-                // Mostrar mensaje de error en todas las secciones
-                showError('domains-summary', 'No se pudo conectar a la base de datos');
-                showError('projects-summary', 'No se pudo conectar a la base de datos');
-                showError('tasks-summary', 'No se pudo conectar a la base de datos');
-                showError('action-plans-summary', 'No se pudo conectar a la base de datos');
-            }
-        });
-    </script>
+  // ------- Boot -------
+  updateSessionChip();
+  restore();
+})();
+</script>
 </body>
 </html>
