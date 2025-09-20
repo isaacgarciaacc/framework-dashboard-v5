@@ -28,10 +28,7 @@
   }
   h1{margin:0; font-size:18px}
   main{flex:1; padding:28px 16px}
-  .grid{
-    display:grid; gap:18px;
-    grid-template-columns: repeat( auto-fit, minmax(260px,1fr) );
-  }
+  .grid{display:grid; gap:18px; grid-template-columns: repeat( auto-fit, minmax(260px,1fr) );}
   .card{
     background:linear-gradient(180deg,#101722,#0b111a);
     border:1px solid var(--border); border-radius:var(--radius);
@@ -39,7 +36,7 @@
   }
   .pill{display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--muted)}
   .pill .dot{width:8px; height:8px; border-radius:50%}
-  .dot.tot{background:#4da3ff} .dot.hermes{background:#7bd389}
+  .dot.tot{background:#4da3ff} .dot.hermes{background:#7bd389} .dot.metatron{background:#c48bff}
   h2{margin:0; font-size:18px}
   p{margin:0; color:var(--muted)}
   a.btn{
@@ -76,6 +73,13 @@
         <h2>Hermes · FedEx</h2>
         <p>Agente especializado para liderazgo técnico (Accenture/FedEx). Endpoint por defecto preconfigurado.</p>
         <a class="btn" href="./chat-hermes.html" aria-label="Abrir chat con Hermes FedEx">Abrir chat Hermes</a>
+      </section>
+
+      <section class="card">
+        <div class="pill"><span class="dot metatron"></span> Orquestador · Maestro</div>
+        <h2>Metatron (Maestro)</h2>
+        <p>Agente maestro orquestador. Chat dedicado con endpoint de Metatron preconfigurado.</p>
+        <a class="btn" href="./chat-metatron.html" aria-label="Abrir chat con Metatron">Abrir chat Metatron</a>
       </section>
     </div>
   </main>
