@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chat · Metatron (Maestro)</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#0f141a; --panel-2:#121821; --text:#e7ecf3;
+    --muted:#9fb0c3; --accent:#c48bff; --accent-2:#4da3ff; --danger:#ff6b6b;
+    --border:#1d2430; --bubble-user:#1b2838; --bubble-bot:#101923;
+    --shadow:0 10px 30px rgba(0,0,0,.35); --radius:16px;
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{
+    margin:0; background:radial-gradient(1200px 800px at 90% -10%, #122033 0%, #0b0f14 60%), var(--bg);
+    color:var(--text); font:400 16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,"Helvetica Neue",Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";
+  }
+  .app{max-width:900px; margin:0 auto; min-height:100%; display:flex; flex-direction:column}
+  header{
+    position:sticky; top:0; z-index:10; display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 16px; background:linear-gradient(180deg, rgba(15,20,26,.9), rgba(15,20,26,.65));
+    backdrop-filter: blur(12px); border-bottom:1px solid var(--border);
+  }
+  .brand{display:flex; align-items:center; gap:12px}
+  .logo{
+    width:36px; height:36px; border-radius:50%;
+    background: conic-gradient(from 220deg, var(--accent), var(--accent-2), #7bd389, var(--accent));
+    box-shadow: 0 0 0 3px rgba(196,139,255,.12), 0 0 0 8px rgba(77,163,255,.07);
+  }
+  .brand h1{margin:0; font-size:16px; letter-spacing:.2px; font-weight:600}
+  .actions{display:flex; gap:8px; flex-wrap:wrap}
+  button,.btn{
+    appearance:none; border:1px solid var(--border); background:var(--panel-2); color:var(--text);
+    padding:10px 12px; border-radius:12px; cursor:pointer; transition:transform .08s ease, background .2s, border-color .2s, opacity .2s;
+  }
+  button:hover{border-color:#2a3444; background:#0f1722}
+  button:active{transform:translateY(1px)}
+  .btn-outline{background:transparent}
+  .btn-accent{background:linear-gradient(180deg,#2c2140,#1b1529); border-color:#3c2d59}
+  .btn-accent:hover{border-color:#60439a}
+  .muted{color:var(--muted)}
+  main{flex:1; display:flex; flex-direction:column; padding:16px}
+  .stream{flex:1; overflow:auto; display:flex; flex-direction:column; gap:14px; padding-bottom:8px; scroll-behavior:smooth}
+  .row{display:flex; gap:10px; align-items:flex-end;}
+  .row.user{justify-content:flex-end}
+  .avatar{width:28px; height:28px; border-radius:50%; background:#0f1b2a; border:1px solid var(--border); flex:none}
+  .avatar.bot{background:#1c1126}
+  .bubble{
+    max-width:min(680px,85%); padding:12px 14px; border-radius:14px;
+    border:1px solid var(--border); box-shadow: var(--shadow);
+    background:var(--bubble-bot); color:var(--text); white-space:pre-wrap; word-wrap:break-word;
+  }
+  .row.user .bubble{background:var(--bubble-user)}
+  .meta{font-size:12px; color:var(--muted); margin-top:6px}
+  .inputbar{
+    position:sticky; bottom:0; z-index:10; padding:12px 16px; background:linear-gradient(0deg, rgba(15,20,26,.92), rgba(15,20,26,.75));
+    border-top:1px solid var(--border); backdrop-filter: blur(8px);
+  }
+  .composer{
+    display:flex; align-items:flex-end; gap:10px; background:var(--panel); border:1px solid var(--border);
+    border-radius:16px; padding:10px; box-shadow: var(--shadow);
+  }
+  textarea{
+    flex:1; resize:none; min-height:44px; max-height:170px; border:0; outline:0; background:transparent; color:var(--text);
+  }
+  .send{display:flex; gap:8px}
+  .chip{font-size:12px; padding:6px 8px; border-radius:999px; border:1px solid var(--border); background:rgba(196,139,255,.1); color:#ecdfff}
+  .toast{
+    position:fixed; right:16px; bottom:16px; background:#1a1324; color:#ecdfff; border:1px solid #3c2d59;
+    padding:10px 12px; border-radius:10px; box-shadow: var(--shadow); display:none;
+  }
+  .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; padding:.5px 6px; border:1px solid var(--border); border-radius:6px; color:var(--muted)}
+  dialog{border:1px solid var(--border); border-radius:16px; background:var(--panel); color:var(--text); padding:0; box-shadow:var(--shadow); width:min(720px,92vw)}
+  dialog::backdrop{background:rgba(0,0,0,.45)}
+  .modal-head{display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid var(--border)}
+  .modal-body{padding:16px; display:grid; gap:12px}
+  .field{display:grid; gap:6px}
+  .field label{font-size:13px; color:var(--muted)}
+  .field input{width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--panel-2); color:var(--text)}
+  .modal-actions{display:flex; justify-content:flex-end; gap:8px; padding:14px 16px; border-top:1px solid var(--border)}
+  .hint{font-size:12px; color:var(--muted)}
+  @media (max-width:520px){
+    header{padding:12px} .brand h1{font-size:15px} .composer{padding:8px}
+    .actions .chip{display:none}
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Chat con Metatron (Maestro)</h1>
+          <div class="muted" style="font-size:12px">Orquestador · n8n Webhook · GitHub Pages</div>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn btn-outline" href="./index.html">← Agentes</a>
+        <span id="sessionChip" class="chip" title="Session ID para memoria">Sesión: —</span>
+        <button id="newSessionBtn" class="btn btn-outline" title="Nueva sesión (limpia historial y rota ID)">🆕 Nueva sesión</button>
+        <button id="exportBtn" class="btn btn-outline" title="Descargar conversación en Markdown">⬇︎ Exportar .md</button>
+        <button id="configBtn" class="btn btn-accent" title="Configurar webhook">⚙︎ Configurar</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="stream" class="stream" aria-live="polite" aria-busy="false"></div>
+    </main>
+
+    <div class="inputbar">
+      <div class="composer">
+        <textarea id="input" placeholder="Escribe tu mensaje… (Enter para enviar, Shift+Enter salto de línea)" rows="1"></textarea>
+        <div class="send">
+          <button id="sendBtn" class="btn btn-accent">Enviar ▷</button>
+        </div>
+      </div>
+      <div class="hint" style="margin-top:8px">
+        Consejo: presiona <span class="kbd">Enter</span> para enviar · <span class="kbd">Shift</span> + <span class="kbd">Enter</span> para salto de línea
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal configuración -->
+  <dialog id="configModal">
+    <div class="modal-head">
+      <strong>Configuración de endpoint</strong>
+      <button id="closeConfig" class="btn btn-outline">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label for="baseUrl">Base URL del Webhook (si pegas la URL completa, deja “Path” vacío)</label>
+        <input id="baseUrl" placeholder="https://TU-DOMINIO/webhook" />
+      </div>
+      <div class="field">
+        <label for="path">Path del Webhook (si Base URL ya incluye /webhook/ID, deja esto vacío)</label>
+        <input id="path" placeholder="2f9c6a09-0493-4d62-930e-82cde93b79da" />
+      </div>
+      <div class="field">
+        <label for="headers">Headers opcionales (JSON)</label>
+        <input id="headers" placeholder='{"Authorization":"Bearer ..."}' />
+      </div>
+      <div class="hint">
+        Este chat hace <code>POST</code> con <code>{ "chatInput": "...", "sessionId": "..." }</code> y muestra la respuesta del nodo <em>Respond to Webhook</em>.
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button id="saveConfig" class="btn btn-accent">Guardar</button>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+
+<script>
+(() => {
+  // ------- State & Storage -------
+  const $ = sel => document.querySelector(sel);
+  const stream = $("#stream"), input = $("#input"), sendBtn = $("#sendBtn");
+  const configBtn = $("#configBtn"), configModal = $("#configModal");
+  const closeConfig = $("#closeConfig"), saveConfig = $("#saveConfig");
+  const baseUrlEl = $("#baseUrl"), pathEl = $("#path"), headersEl = $("#headers");
+  const sessionChip = $("#sessionChip"), newSessionBtn = $("#newSessionBtn"), toast = $("#toast");
+  const exportBtn = $("#exportBtn");
+
+  // Namespace exclusivo para no colisionar con TOT/Hermes
+  const STORAGE_KEYS = {
+    baseUrl: "metatron.baseUrl",
+    path: "metatron.path",
+    headers: "metatron.headers",
+    sessionId: "metatron.sessionId",
+    history: "metatron.history"
+  };
+
+  // Endpoint por defecto (Metatron maestro)
+  const DEFAULT_WEBHOOK = "https://metatron.aircraftcare.net/webhook/2f9c6a09-0493-4d62-930e-82cde93b79da";
+
+  // --- Utils
+  function uuidv4(){
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c/4).toString(16)
+    );
+  }
+  function safeParse(str){ if(!str) return null; try{ return JSON.parse(str); } catch { return null; } }
+
+  function getConfig(){
+    const baseUrlStored = localStorage.getItem(STORAGE_KEYS.baseUrl) ?? "";
+    const pathStored    = localStorage.getItem(STORAGE_KEYS.path) ?? "";
+    const headers       = safeParse(localStorage.getItem(STORAGE_KEYS.headers)) ?? {};
+    if (!baseUrlStored && !pathStored) {
+      return { baseUrl: "", path: DEFAULT_WEBHOOK, headers };
+    }
+    return { baseUrl: baseUrlStored, path: pathStored, headers };
+  }
+  function setConfig({baseUrl, path, headers}){
+    if (typeof baseUrl === "string") localStorage.setItem(STORAGE_KEYS.baseUrl, baseUrl.trim());
+    if (typeof path === "string") localStorage.setItem(STORAGE_KEYS.path, path.trim());
+    if (headers && typeof headers === "object") localStorage.setItem(STORAGE_KEYS.headers, JSON.stringify(headers));
+    loadConfigIntoModal();
+  }
+
+  function getSession(){
+    let id = localStorage.getItem(STORAGE_KEYS.sessionId);
+    if(!id){ id = uuidv4(); localStorage.setItem(STORAGE_KEYS.sessionId, id); }
+    return id;
+  }
+  function rotateSession(){
+    const id = uuidv4();
+    localStorage.setItem(STORAGE_KEYS.sessionId, id);
+    updateSessionChip();
+    pushSys("Se generó un nuevo Session ID.");
+  }
+  function updateSessionChip(){
+    const id = getSession();
+    sessionChip.textContent = "Sesión: " + id.slice(0,8);
+    sessionChip.title = id;
+  }
+
+  function saveHistory(msgs){ localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(msgs)); }
+  function loadHistory(){ return safeParse(localStorage.getItem(STORAGE_KEYS.history)) ?? []; }
+
+  // ------- Auto-scroll robusto -------
+  function scrollToBottom(){
+    // Varias pasadas para garantizar scroll con render async
+    requestAnimationFrame(()=>{
+      stream.scrollTop = stream.scrollHeight;
+      requestAnimationFrame(()=>{ stream.scrollTop = stream.scrollHeight; });
+    });
+  }
+  const observer = new MutationObserver(()=> scrollToBottom());
+  observer.observe(stream, { childList:true, subtree:false });
+
+  window.addEventListener("resize", scrollToBottom);
+
+  // ------- UI helpers -------
+  function el(tag, attrs={}, children=[]){
+    const node = document.createElement(tag);
+    for(const [k,v] of Object.entries(attrs)){
+      if(k==="class") node.className=v;
+      else if(k.startsWith("on") && typeof v==="function") node.addEventListener(k.substring(2), v);
+      else node.setAttribute(k,v);
+    }
+    children.forEach(ch=> typeof ch==="string" ? node.appendChild(document.createTextNode(ch)) : ch && node.appendChild(ch));
+    return node;
+  }
+  function nowTime(){ return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
+
+  function pushMsg(role, text, meta=""){
+    const row = el("div",{class:"row " + (role==="user" ? "user" : "bot")});
+    const avatar = el("div",{class:"avatar " + (role==="bot" ? "bot":"user")});
+    const bubble = el("div",{class:"bubble"},[text]);
+    const aside = el("div",{class:"meta"},[meta || nowTime()]);
+    const wrap = el("div"); wrap.appendChild(bubble); wrap.appendChild(aside);
+    if(role==="user"){ row.appendChild(wrap); row.appendChild(avatar); }
+    else { row.appendChild(avatar); row.appendChild(wrap); }
+    stream.appendChild(row);
+    scrollToBottom();
+    persist();
+  }
+  function pushTyping(){
+    const id="typing-"+Date.now();
+    const row=el("div",{class:"row bot",id});
+    const avatar=el("div",{class:"avatar bot"});
+    const bubble=el("div",{class:"bubble"},["…"]); bubble.style.opacity=.7;
+    row.appendChild(avatar); row.appendChild(el("div",{},[bubble, el("div",{class:"meta"},["Escribiendo…"])]));
+    stream.appendChild(row); scrollToBottom();
+    return id;
+  }
+  function replaceTyping(id,text){ const n=document.getElementById(id); if(!n) return; n.remove(); pushMsg("bot", text); }
+  function pushSys(text){ pushMsg("bot","ℹ️ "+text); }
+  function toastShow(msg,ms=3200){ toast.textContent=msg; toast.style.display="block"; setTimeout(()=>toast.style.display="none",ms); }
+
+  // Modal
+  function loadConfigIntoModal(){
+    const {baseUrl, path, headers} = getConfig();
+    baseUrlEl.value = baseUrl;
+    pathEl.value = path;
+    headersEl.value = headers ? JSON.stringify(headers) : "";
+  }
+  const openConfig = () => { loadConfigIntoModal(); configModal.showModal(); };
+  const closeConfigModal = () => configModal.close();
+
+  function persist(){
+    const msgs=[...document.querySelectorAll(".row")].map(row=>{
+      const role=row.classList.contains("user")?"user":"bot";
+      const text=row.querySelector(".bubble")?.textContent ?? "";
+      return {role,text};
+    });
+    saveHistory(msgs);
+  }
+  function restore(){
+    const msgs=loadHistory();
+    if(!msgs.length){
+      pushSys("Metatron listo. Endpoint preconfigurado. Envía tu primer mensaje.");
+      return;
+    }
+    msgs.forEach(m=>pushMsg(m.role,m.text));
+  }
+
+  // ------- Exportar Markdown -------
+  function exportMarkdown(){
+    const msgs = loadHistory();
+    const lines = [];
+    lines.push("# Conversación con Metatron");
+    lines.push("");
+    const sid = localStorage.getItem(STORAGE_KEYS.sessionId) || "-";
+    lines.push(`- **Session ID:** ${sid}`);
+    lines.push(`- **Fecha:** ${new Date().toISOString()}`);
+    lines.push("");
+    msgs.forEach((m,i)=>{
+      const who = m.role==="user" ? "Usuario" : "Metatron";
+      lines.push(`### ${who}`);
+      lines.push("");
+      // Escapar triples backticks básicos
+      const txt = String(m.text).replace(/```/g,"``\\`");
+      lines.push(txt);
+      lines.push("");
+      if(i < msgs.length-1) lines.push("---");
+    });
+    const blob = new Blob([lines.join("\n")], {type: "text/markdown;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `chat-metatron-${sid.slice(0,8)}.md`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  // ------- Nueva sesión (limpia historial) -------
+  function newSession(){
+    // Limpiar historial visual y almacenado, y rotar Session ID
+    localStorage.removeItem(STORAGE_KEYS.history);
+    stream.innerHTML = "";
+    rotateSession();
+    pushSys("Nueva sesión iniciada. El historial anterior fue limpiado.");
+  }
+
+  // ------- Networking -------
+  async function sendToMetatron(message){
+    const { baseUrl, path, headers } = getConfig();
+    if(!baseUrl && !path){ openConfig(); throw new Error("Configura la URL del webhook antes de enviar."); }
+
+    let url = (baseUrl || "").trim();
+    if(url && path){ url = url.replace(/\/+$/,"") + "/" + String(path).replace(/^\/+/,""); }
+    if(!url) url = path;
+    if(!/^https?:\/\//i.test(url)) throw new Error("La URL del webhook debe empezar con http(s)://");
+
+    const sessionId = getSession();
+    const payload = { chatInput: message, sessionId };
+
+    const resp = await fetch(url, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", ...(headers||{}) },
+      body: JSON.stringify(payload)
+    });
+
+    const ct = resp.headers.get("content-type") || "";
+    const raw = await (ct.includes("application/json") ? resp.json() : resp.text());
+    if(!resp.ok){
+      const body = typeof raw === "string" ? raw : JSON.stringify(raw);
+      throw new Error(`HTTP ${resp.status}: ${body}`);
+    }
+    let answer="";
+    if(typeof raw==="string") answer=raw;
+    else answer = raw.text ?? raw.answer ?? raw.message ?? raw.output ?? raw.result ?? JSON.stringify(raw,null,2);
+    return String(answer).trim();
+  }
+
+  // ------- Events -------
+  sendBtn.addEventListener("click", onSend);
+  input.addEventListener("keydown", e => { if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); onSend(); }});
+  configBtn.addEventListener("click", openConfig);
+  closeConfig.addEventListener("click", closeConfigModal);
+  saveConfig.addEventListener("click", ()=>{
+    let headers = safeParse(headersEl.value);
+    if(headersEl.value && !headers){ toastShow("Headers no es JSON válido"); return; }
+    setConfig({ baseUrl: baseUrlEl.value, path: pathEl.value, headers });
+    closeConfigModal(); toastShow("Configuración guardada");
+  });
+  newSessionBtn.addEventListener("click", newSession);
+  exportBtn.addEventListener("click", exportMarkdown);
+
+  async function onSend(){
+    const text = input.value.trim(); if(!text) return;
+    input.value=""; pushMsg("user", text);
+    const typingId = pushTyping();
+    try{
+      const answer = await sendToMetatron(text);
+      replaceTyping(typingId, answer || "— (sin contenido)");
+    }catch(err){
+      console.error(err);
+      replaceTyping(typingId, "⚠️ Error al consultar Metatron.\n" + (err?.message ?? String(err)));
+      toastShow("Error al consultar el agente");
+    }
+  }
+
+  // Boot
+  updateSessionChip(); restore(); scrollToBottom();
+})();
+</script>
+</body>
+</html>
