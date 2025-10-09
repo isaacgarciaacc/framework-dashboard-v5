@@ -203,6 +203,7 @@
   };
 
   const DEFAULT_WEBHOOK = "https://metatron.aircraftcare.net/webhook/bf4dd093-bb02-472c-9454-7ab9af97bd1d";
+  const AGENT_PREFIX = "tot:";
 
   function uuidv4(){
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>
@@ -353,57 +354,39 @@
 
   // ------- Networking to n8n -------
   async function sendToTOT(message){
-    const { baseUrl, path, headers } = getConfig();
-    if(!baseUrl && !path){
-      openConfig();
-      throw new Error("Configura la URL del webhook antes de enviar.");
-    }
+      const { baseUrl, path, headers } = getConfig();
+      let url = (baseUrl || "").trim();
+      if(url && path){ url = url.replace(/\/+$/,"") + "/" + String(path).replace(/^\/+/,""); }
+      if(!url) url = path || DEFAULT_WEBHOOK;
+      if(!/^https?:\/\//i.test(url)) throw new Error("La URL del webhook debe empezar con http(s)://");
 
-    // Construye la URL final
-    // Si baseUrl ya incluye /webhook/ID-completo -> úsalo tal cual
-    // Si baseUrl termina en /webhook y hay path -> concatena
-    // Si baseUrl no trae /webhook, permitimos que el usuario haya pegado ya completo (flexible).
-    let url = baseUrl.trim();
-    if(url && path){
-      // Evita dobles slashes
-      url = url.replace(/\/+$/,"") + "/" + path.replace(/^\/+/,"");
-    }
-    if(!url) url = path; // último recurso si pegaron la URL completa en el campo path
+      const sessionId = AGENT_PREFIX + getSession();
+      const payload = { chatInput: message, sessionId };
 
-    if(!/^https?:\/\//i.test(url)){
-      throw new Error("La URL del webhook debe empezar con http(s)://");
-    }
-
-    const sessionId = getSession();
-    const payload = { chatInput: message, sessionId };
-
-    const resp = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type":"application/json",
-        ...(headers || {})
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const contentType = resp.headers.get("content-type") || "";
-    const raw = await (contentType.includes("application/json") ? resp.json() : resp.text());
-
-    if(!resp.ok){
-      const body = typeof raw === "string" ? raw : JSON.stringify(raw);
-      throw new Error(`HTTP ${resp.status}: ${body}`);
-    }
-
-    // Intenta normalizar el texto de salida
-    let answer = "";
-    if (typeof raw === "string") {
-      answer = raw;
-    } else if (raw) {
-      // heurística común
-      answer = raw.text ?? raw.answer ?? raw.message ?? raw.output ?? raw.result ?? JSON.stringify(raw, null, 2);
-    }
-    return String(answer).trim();
-  }
+      try {
+        const resp = await fetch(url, {
+          method: "POST",
+          mode: "cors",
+          credentials: "omit",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(payload),
+          cache: "no-store",
+        });
+        const text = await resp.text();
+        if(!resp.ok){ throw new Error(`HTTP ${resp.status}: ${text}`); }
+        let data; try { data = JSON.parse(text); } catch { data = null; }
+        let answer = "";
+        if (typeof data === "string") answer = data;
+        else if (data) answer = data.text ?? data.answer ?? data.message ?? data.output ?? data.result ?? text;
+        else answer = text;
+        return String(answer).trim();
+      } catch (err){
+        if (err instanceof TypeError) {
+          throw new Error("El navegador bloqueó la llamada por CORS (falta Access-Control-Allow-Origin en la respuesta del webhook).");
+        }
+        throw err;
+      }
+    
 
   // ------- Events -------
   sendBtn.addEventListener("click", onSend);
@@ -444,6 +427,6 @@
 })();
 </script>
   <!-- Auto-scroll global -->
-<script src="./chat-autoscroll.js"></script>
+<script>(function(){const stream=document.getElementById("stream");if(!stream)return;const mo=new MutationObserver(()=>{stream.scrollTop=stream.scrollHeight;});mo.observe(stream,{childList:true});window.addEventListener("resize",()=>{stream.scrollTop=stream.scrollHeight;});})();</script>
 </body>
 </html>
