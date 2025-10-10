@@ -1,18 +1,23 @@
-/* assets/js/main.js — lógica común Index + Chats */
+/* assets/js/main.js — lógica común Index + Chats (con Basic Auth opcional y diagnósticos) */
 (() => {
   'use strict';
 
-  const $ = (sel, ctx=document) => ctx.querySelector(sel);
-  const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+  const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
   const nowYear = () => new Date().getFullYear();
-  const elYearAll = $$(`#year`); elYearAll.forEach(e => e.textContent = nowYear());
-  const sanitize = (str='') => str
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-  // UUID v4 sin dependencias (suficiente para sessionId no-criptográfico)
-  const uuidv4 = () => (URL.createObjectURL(new Blob()).split('/').pop() || '').replace(/-/g,'');
+  const elYearAll = $$('#year'); elYearAll.forEach(e => e.textContent = nowYear());
 
-  // LocalStorage helpers
+  const sanitize = (str = '') =>
+    str.replace(/&/g, '&amp;')
+       .replace(/</g, '&lt;')
+       .replace(/>/g, '&gt;')
+       .replace(/"/g, '&quot;')
+       .replace(/'/g, '&#039;');
+
+  // UUID v4 “sencillo” (no criptográfico)
+  const uuidv4 = () => (URL.createObjectURL(new Blob()).split('/').pop() || '').replace(/-/g, '');
+
+  // ---- LocalStorage helpers
   const storageKey = (agent, sessionId) => `app_chat_${agent}_${sessionId}`;
   const loadHistory = (agent, sessionId) => {
     try { return JSON.parse(localStorage.getItem(storageKey(agent, sessionId)) || '[]'); }
@@ -22,7 +27,19 @@
     localStorage.setItem(storageKey(agent, sessionId), JSON.stringify(arr));
   };
 
-  // Render de burbujas
+  // ---- Headers (incluye Basic Auth opcional desde APP_CONFIG.auth)
+  const buildHeaders = () => {
+    const headers = { 'Content-Type': 'application/json' };
+    const auth = window.APP_CONFIG?.auth;
+    if (auth?.type === 'basic') {
+      const u = String(auth.username || '');
+      const p = String(auth.password || '');
+      headers['Authorization'] = 'Basic ' + btoa(`${u}:${p}`);
+    }
+    return headers;
+  };
+
+  // ---- Render de burbujas
   const renderMessage = (wrap, role, content, ts = Date.now()) => {
     const item = document.createElement('div');
     item.className = `msg ${role}`;
@@ -32,16 +49,16 @@
     const time = document.createElement('span');
     const date = new Date(ts);
     time.className = 'timestamp';
-    time.textContent = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+    time.textContent = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
     bubble.appendChild(time);
     item.appendChild(bubble);
     wrap.appendChild(item);
     wrap.scrollTo({ top: wrap.scrollHeight, behavior: 'smooth' });
   };
 
-  // Fetch con timeout; usa AbortSignal.timeout si está disponible, sino fallback manual
-  const fetchWithTimeout = async (url, opts={}, ms=45000) => {
-    if (AbortSignal && 'timeout' in AbortSignal) {
+  // ---- Fetch con timeout
+  const fetchWithTimeout = async (url, opts = {}, ms = 45000) => {
+    if (typeof AbortSignal !== 'undefined' && 'timeout' in AbortSignal) {
       return fetch(url, { ...opts, signal: AbortSignal.timeout(ms) });
     }
     const controller = new AbortController();
@@ -50,39 +67,54 @@
     finally { clearTimeout(id); }
   };
 
+  // ---- Parseo de respuesta API
   const parseApiResponse = async (resp) => {
     const text = await resp.text();
+    // Intentar JSON primero
     try {
       const data = JSON.parse(text);
-      if (data && Array.isArray(data.messages)) {
+      if (Array.isArray(data?.messages)) {
         return data.messages.map(m => (m.content ?? '')).join('\n\n').trim();
       }
-      if (data && typeof data.assistant === 'string') {
+      if (typeof data?.assistant === 'string') {
         return data.assistant;
       }
-      // Fallback si vino otra forma
+      // JSON válido pero sin formato esperado → devolver legible
       return text || 'Respuesta vacía.';
     } catch {
+      // No-JSON → devolver texto crudo (útil para diagnósticos)
       return text || 'Respuesta no-JSON.';
     }
   };
 
+  // ---- Página Index (ping CORS)
   const initIndexPage = () => {
     const originEl = $('#current-origin');
     if (originEl) originEl.textContent = location.origin;
+
     const pingBtn = $('#ping-btn');
     const pingOut = $('#ping-result');
+
     if (pingBtn && pingOut && window.APP_CONFIG?.agents?.hermes) {
       pingBtn.addEventListener('click', async () => {
         pingOut.textContent = 'probando…';
         try {
-          const resp = await fetchWithTimeout(window.APP_CONFIG.agents.hermes.webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            mode: 'cors',
-            body: JSON.stringify({ chatInput: 'ping', sessionId: 'ping-index' }),
-          }, 8000);
-          pingOut.textContent = resp.ok ? 'CORS OK ✓' : `HTTP ${resp.status}`;
+          const resp = await fetchWithTimeout(
+            window.APP_CONFIG.agents.hermes.webhookUrl,
+            {
+              method: 'POST',
+              headers: buildHeaders(),
+              mode: 'cors',
+              body: JSON.stringify({ chatInput: 'ping', sessionId: 'ping-index' }),
+            },
+            8000
+          );
+          if (!resp.ok) {
+            const snippet = (await resp.text()).slice(0, 120);
+            pingOut.textContent = `HTTP ${resp.status} (${snippet || 'sin cuerpo'})`;
+          } else {
+            pingOut.textContent = 'CORS OK ✓';
+          }
         } catch (e) {
           pingOut.textContent = 'CORS bloqueado o timeout ✗';
         }
@@ -90,10 +122,20 @@
     }
   };
 
+  // ---- Páginas de Chat
   const initChatPage = () => {
+    // Validar configuración cargada
+    if (!window.APP_CONFIG || !window.APP_CONFIG.agents) {
+      alert('APP_CONFIG no encontrado. Verifica <script src="assets/config.js"> en el HTML.');
+      return;
+    }
+
     const agentKey = document.body.getAttribute('data-agent');
-    const agentCfg = window.APP_CONFIG?.agents?.[agentKey];
-    if (!agentCfg) { alert('Agente no configurado en assets/config.js'); return; }
+    const agentCfg = window.APP_CONFIG.agents[agentKey];
+    if (!agentCfg || !agentCfg.webhookUrl) {
+      alert('Agente no configurado en assets/config.js');
+      return;
+    }
 
     const msgWrap = $('#messages');
     const input = $('#userInput');
@@ -119,12 +161,11 @@
     prev.forEach(m => renderMessage(msgWrap, m.role, m.content, m.ts));
 
     // Contador de chars
-    input.addEventListener('input', () => {
-      charCount.textContent = `${input.value.length} / ${input.maxLength}`;
-    });
-    charCount.textContent = `${input.value.length} / ${input.maxLength}`;
+    const updateCount = () => { charCount.textContent = `${input.value.length} / ${input.maxLength}`; };
+    input.addEventListener('input', updateCount);
+    updateCount();
 
-    // Envío
+    // Estados UI
     const setUIBusy = (busy) => {
       sendBtn.disabled = busy;
       input.disabled = busy;
@@ -139,6 +180,7 @@
       banner.textContent = msg;
     };
 
+    // Envío
     const onSend = async () => {
       const text = input.value.trim();
       if (!text) return;
@@ -146,12 +188,12 @@
 
       // Append usuario
       const history = loadHistory(agentKey, sid);
-      const userMsg = { role:'user', content:text, ts: Date.now() };
+      const userMsg = { role: 'user', content: text, ts: Date.now() };
       history.push(userMsg);
       saveHistory(agentKey, sid, history);
       renderMessage(msgWrap, 'user', text, userMsg.ts);
       input.value = '';
-      charCount.textContent = `${input.value.length} / ${input.maxLength}`;
+      updateCount();
 
       // Llamada
       setUIBusy(true);
@@ -161,21 +203,36 @@
           await new Promise(r => setTimeout(r, 600));
           assistantText = 'Respuesta simulada (mock).';
         } else {
-          const resp = await fetchWithTimeout(agentCfg.webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            mode: 'cors',
-            body: JSON.stringify({ chatInput: text, sessionId: sid })
-          }, 45000);
+          const headers = buildHeaders();
+          // Log suave de diagnóstico (no invade UI)
+          console.info('[Chat]', agentKey, '→', agentCfg.webhookUrl);
+
+          const resp = await fetchWithTimeout(
+            agentCfg.webhookUrl,
+            {
+              method: 'POST',
+              headers,
+              mode: 'cors',
+              body: JSON.stringify({ chatInput: text, sessionId: sid }),
+            },
+            45000
+          );
+
+          if (!resp.ok) {
+            const snippet = (await resp.text()).slice(0, 240);
+            throw new Error(`HTTP ${resp.status} — ${snippet || 'sin cuerpo'}`);
+          }
+
           assistantText = await parseApiResponse(resp);
         }
 
-        const botMsg = { role:'assistant', content:assistantText, ts: Date.now() };
+        const botMsg = { role: 'assistant', content: assistantText, ts: Date.now() };
         const h2 = loadHistory(agentKey, sid); h2.push(botMsg); saveHistory(agentKey, sid, h2);
         renderMessage(msgWrap, 'assistant', assistantText, botMsg.ts);
         banner.classList.add('hidden');
       } catch (err) {
-        showError('No se pudo conectar (CORS/timeout). Activa Mock Mode o reintenta.');
+        console.error('[Chat] Error al llamar webhook:', err);
+        showError('No se pudo conectar o respuesta inválida (CORS/HTTP/timeout). Activa Mock Mode o reintenta.');
       } finally {
         setUIBusy(false);
       }
@@ -187,9 +244,10 @@
     });
   };
 
-  // Boot
+  // ---- Boot
   const page = document.body.getAttribute('data-page');
-  $('#current-origin') && ($('#current-origin').textContent = location.origin);
+  const origin = $('#current-origin');
+  if (origin) origin.textContent = location.origin;
   if (page === 'index') initIndexPage();
   if (page === 'chat') initChatPage();
 })();
