@@ -1,0 +1,87 @@
+/* main.css — estilo global para Index y Chats (mobile-first) */
+:root{
+  --bg: #0b0f14;
+  --bg-soft: #111723;
+  --card: #141a26;
+  --text: #dfe7ff;
+  --muted:#98a3b8;
+  --primary:#4da3ff;
+  --primary-600:#2b83e6;
+  --border:#22304a;
+  --ok:#5bd69e;
+  --err:#ff6b6b;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(180deg,var(--bg),var(--bg-soft));
+  color:var(--text);
+  font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+
+.site-header, .site-footer{
+  display:flex; align-items:center; gap:.75rem;
+  padding:1rem 1.25rem; border-bottom:1px solid var(--border);
+  background:rgba(10,14,20,.4); backdrop-filter: blur(6px);
+}
+.site-footer{ border-top:1px solid var(--border); border-bottom:none; justify-content:center }
+
+.logo{ width:32px; height:32px }
+.back{ color:var(--muted); text-decoration:none; font-size:1.25rem; margin-right:.25rem }
+.container{ max-width:1100px; margin:0 auto; padding:1.25rem }
+
+.cards{ display:grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap:1rem; margin-top:1rem }
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:1rem; box-shadow:var(--shadow);
+}
+h1,h2,h3{ margin:.25rem 0 .5rem }
+p{ color:var(--muted); margin:.25rem 0 .75rem }
+
+.btn{ display:inline-block; padding:.6rem 1rem; border-radius:12px; background:var(--primary); color:#07111f; text-decoration:none; font-weight:700; border:1px solid transparent }
+.btn:hover{ background:var(--primary-600) }
+.btn.outline{ background:transparent; color:var(--primary); border-color:var(--primary) }
+
+.status{ margin-top:2rem }
+.status-grid{ display:grid; grid-template-columns:1fr auto; gap:.75rem; align-items:center }
+.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; color:var(--muted) }
+
+/* Chat */
+.chat-container{ max-width:900px; margin:0 auto; padding:1rem; display:flex; flex-direction:column; gap:1rem }
+.messages{
+  background:var(--card); border:1px solid var(--border); border-radius:16px; min-height:45vh; max-height:60vh;
+  padding:1rem; overflow:auto; scroll-behavior:smooth; box-shadow:var(--shadow);
+}
+.msg{ display:flex; margin:.5rem 0 }
+.msg .bubble{
+  max-width:75%; padding:.6rem .8rem; border-radius:14px; border:1px solid var(--border);
+  box-shadow:0 6px 18px rgba(0,0,0,.25); word-wrap:break-word; white-space:pre-wrap
+}
+.msg.user{ justify-content:flex-end }
+.msg.user .bubble{ background:#123457; color:#eaf3ff }
+.msg.assistant .bubble{ background:#182233; color:#e6efff }
+.timestamp{ display:block; font-size:.75rem; color:var(--muted); margin-top:.25rem }
+
+.composer{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1rem; box-shadow:var(--shadow) }
+.controls{ display:flex; gap:1rem; flex-wrap:wrap; align-items:center; margin-bottom:.5rem }
+.controls .inline{ display:flex; gap:.5rem; align-items:center }
+.controls input{ background:#0e1624; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:.4rem .6rem }
+
+.switch{ display:flex; align-items:center; gap:.5rem }
+textarea#userInput{
+  width:100%; background:#0e1624; color:var(--text); border:1px solid var(--border); border-radius:12px; padding:.75rem; resize:vertical
+}
+.toolbar{ display:flex; align-items:center; justify-content:space-between; margin-top:.5rem }
+.banner{ margin-top:.75rem; padding:.6rem .8rem; border-radius:10px; background:#182233; border:1px dashed var(--border); color:var(--muted) }
+.banner.error{ background:#2a1111; border-color:#5a1c1c; color:#ffb3b3 }
+.hidden{ display:none }
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+
+@media (prefers-color-scheme: light){
+  :root{ --bg:#f6f8fc; --bg-soft:#eef2f9; --card:#ffffff; --text:#101828; --muted:#475467; --border:#e5e7eb; --primary:#2970ff; --primary-600:#155eef; --shadow:0 10px 30px rgba(2,6,23,.08) }
+  .msg.user .bubble{ background:#e6efff; color:#102a56 }
+  .msg.assistant .bubble{ background:#f1f5ff; color:#0f1c2e }
+}

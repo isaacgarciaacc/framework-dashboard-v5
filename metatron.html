@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat Metatron</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" href="assets/img/logo.svg">
+</head>
+<body data-page="chat" data-agent="metatron">
+  <header class="site-header">
+    <a class="back" href="index.html" aria-label="Volver al inicio">←</a>
+    <img src="assets/img/logo.svg" alt="Logo" class="logo" />
+    <h1>Chat Metatron</h1>
+  </header>
+
+  <main class="chat-container">
+    <section id="messages" class="messages" aria-live="polite" aria-label="Historial de conversación"></section>
+
+    <section class="composer" aria-label="Escribir mensaje">
+      <div class="controls">
+        <label class="inline">
+          Session ID:
+          <input id="sessionId" type="text" inputmode="text" autocomplete="off" placeholder="auto" />
+        </label>
+
+        <label class="switch">
+          <input id="mockToggle" type="checkbox" />
+          <span>Mock Mode</span>
+        </label>
+      </div>
+
+      <label class="sr-only" for="userInput">Mensaje</label>
+      <textarea id="userInput" rows="3" maxlength="4000" placeholder="Escribe tu mensaje..."></textarea>
+      <div class="toolbar">
+        <span id="charCount" class="mono">0 / 4000</span>
+        <button id="sendBtn" class="btn">Enviar</button>
+      </div>
+
+      <div id="banner" class="banner hidden" role="status" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Centro de Agentes</p>
+  </footer>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

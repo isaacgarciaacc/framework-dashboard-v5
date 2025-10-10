@@ -1,117 +1,56 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Agentes · Metatron</title>
-<style>
-  :root{
-    --bg:#0b0f14; --panel:#0f141a; --panel-2:#121821; --text:#e7ecf3;
-    --muted:#9fb0c3; --accent:#4da3ff; --accent-2:#7bd389; --accent-3:#c48bff; --accent-4:#f7a93b;
-    --border:#1d2430; --shadow:0 10px 30px rgba(0,0,0,.35); --radius:18px;
-  }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{
-    margin:0; color:var(--text); background:radial-gradient(1200px 800px at 90% -10%, #122033 0%, #0b0f14 60%), var(--bg);
-    font:400 16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,"Helvetica Neue",Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";
-  }
-  .wrap{max-width:1100px; margin:0 auto; min-height:100%; display:flex; flex-direction:column}
-  header{
-    padding:18px 16px; border-bottom:1px solid var(--border);
-    background:linear-gradient(180deg, rgba(15,20,26,.9), rgba(15,20,26,.65));
-    backdrop-filter: blur(12px); position:sticky; top:0; z-index:10;
-  }
-  .brand{display:flex; align-items:center; gap:12px; justify-content:space-between; flex-wrap:wrap}
-  .brand-left{display:flex; align-items:center; gap:12px}
-  .logo{width:38px; height:38px; border-radius:50%;
-    background: conic-gradient(from 220deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
-    box-shadow: 0 0 0 3px rgba(77,163,255,.12), 0 0 0 8px rgba(123,211,137,.07);
-  }
-  h1{margin:0; font-size:18px}
-  .cta{
-    display:inline-flex; align-items:center; gap:10px; text-decoration:none;
-    background:linear-gradient(180deg,#5c3c11,#3c280c); color:#ffe3b5; border:1px solid #6b4a16;
-    padding:10px 14px; border-radius:12px; box-shadow:var(--shadow);
-  }
-  .cta:hover{border-color:#9b6a20}
-  .cta .dot{width:10px; height:10px; border-radius:50%; background:var(--accent-4)}
-  main{flex:1; padding:28px 16px}
-  .grid{display:grid; gap:18px; grid-template-columns: repeat( auto-fit, minmax(260px,1fr) );}
-  .card{
-    background:linear-gradient(180deg,#101722,#0b111a);
-    border:1px solid var(--border); border-radius:var(--radius);
-    box-shadow:var(--shadow); padding:18px; display:grid; gap:12px;
-  }
-  .pill{display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--muted)}
-  .pill .dot{width:8px; height:8px; border-radius:50%}
-  .dot.tot{background:#4da3ff} .dot.hermes{background:#7bd389} .dot.metatron{background:#c48bff} .dot.narrador{background:#f7a93b}
-  h2{margin:0; font-size:18px}
-  p{margin:0; color:var(--muted)}
-  a.btn{
-    text-decoration:none; text-align:center; padding:10px 12px; border-radius:12px; border:1px solid var(--border);
-    background:linear-gradient(180deg,#1d344e,#142234); color:var(--text); transition:.2s;
-  }
-  a.btn:hover{border-color:#315a81}
-  .btn-gold{
-    background:linear-gradient(180deg,#5c3c11,#3c280c);
-    border-color:#6b4a16; color:#ffe3b5;
-  }
-  .btn-gold:hover{border-color:#9b6a20}
-  footer{padding:18px 16px; color:var(--muted); border-top:1px solid var(--border)}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Centro de Agentes</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" href="assets/img/logo.svg">
 </head>
-<body>
-<div class="wrap">
-  <header>
-    <div class="brand">
-      <div class="brand-left">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>Centro de Agentes · Metatron</h1>
-          <div style="font-size:12px; color:#a8b6c8">Elige un chat para comenzar</div>
-        </div>
-      </div>
-      <!-- CTA llamativa -->
-      <a class="cta" href="./chat-metatron-narrador.html" aria-label="Escuchar la historia del Héroe con Metatron Narrador">
-        <span class="dot"></span> Escuchar la Historia del Héroe
-      </a>
-    </div>
+<body data-page="index">
+  <header class="site-header">
+    <img src="assets/img/logo.svg" alt="Logo" class="logo" />
+    <h1>Centro de Agentes</h1>
   </header>
 
-  <main>
-    <div class="grid">
-      <section class="card">
-        <div class="pill"><span class="dot tot"></span> RAG · n8n Webhook</div>
-        <h2>TOT Agent</h2>
-        <p>Agente técnico general — chatea sobre tu RAG base. Incluye configuración manual del endpoint.</p>
-        <a class="btn" href="./chat-tot.html" aria-label="Abrir chat con TOT">Abrir chat TOT</a>
-      </section>
+  <main class="container">
+    <section class="cards">
+      <article class="card">
+        <h2>Hermes</h2>
+        <p>RAG iOS/Swift/Core Data</p>
+        <a class="btn" href="hermes.html">Abrir chat</a>
+      </article>
 
-      <section class="card">
-        <div class="pill"><span class="dot hermes"></span> RAG · FedEx</div>
-        <h2>Hermes · FedEx</h2>
-        <p>Agente especializado para liderazgo técnico (Accenture/FedEx). Endpoint por defecto preconfigurado.</p>
-        <a class="btn" href="./chat-hermes.html" aria-label="Abrir chat con Hermes FedEx">Abrir chat Hermes</a>
-      </section>
+      <article class="card">
+        <h2>TOT</h2>
+        <p>Liderazgo Técnico / Arquitectura</p>
+        <a class="btn" href="tot.html">Abrir chat</a>
+      </article>
 
-      <section class="card">
-        <div class="pill"><span class="dot metatron"></span> Orquestador · Maestro</div>
-        <h2>Metatron (Maestro)</h2>
-        <p>Agente maestro orquestador. Chat dedicado con endpoint de Metatron preconfigurado.</p>
-        <a class="btn" href="./chat-metatron.html" aria-label="Abrir chat con Metatron">Abrir chat Metatron</a>
-      </section>
+      <article class="card">
+        <h2>Metatron</h2>
+        <p>Orquestador Maestro</p>
+        <a class="btn" href="metatron.html">Abrir chat</a>
+      </article>
+    </section>
 
-      <!-- Nueva tarjeta Narrador -->
-      <section class="card">
-        <div class="pill"><span class="dot narrador"></span> Narrativa Épica · TTS-ready</div>
-        <h2>Metatron Narrador</h2>
-        <p>Genera el capítulo de <em>ayer</em> del Héroe. Si falta evidencia, te pedirá la última actividad remarcable.</p>
-        <a class="btn btn-gold" href="./chat-metatron-narrador.html" aria-label="Abrir chat con Metatron Narrador">Abrir Metatron Narrador</a>
-      </section>
-    </div>
+    <section class="status">
+      <h3>Estado</h3>
+      <div class="status-grid">
+        <div><strong>Dominio actual:</strong> <span id="current-origin"></span></div>
+        <div>
+          <button id="ping-btn" class="btn outline">Probar CORS (Hermes)</button>
+          <span id="ping-result" class="mono"></span>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer>© Metatron · AircraftCare — GitHub Pages</footer>
-</div>
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Centro de Agentes · Listo para GitHub Pages</p>
+  </footer>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
