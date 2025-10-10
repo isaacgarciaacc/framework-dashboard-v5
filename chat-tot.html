@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat con TOT · FedEx</title>
+  <style>
+    :root { --bg:#0b1220; --panel:#101828; --ink:#e5eefc; --muted:#98a2b3; --ok:#22c55e; --warn:#f59e0b; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.4 ui-sans-serif, system-ui, Segoe UI, Roboto; }
+    header { display:flex; align-items:center; gap:.75rem; padding:12px 16px; background:var(--panel); position:sticky; top:0; z-index:10; }
+    .title { font-weight:700; }
+    .chip { margin-left:auto; padding:.25rem .5rem; border-radius:999px; background:#1f2937; color:#cbd5e1; font-size:.8rem; }
+    main { display:flex; flex-direction:column; height:calc(100vh - 56px); }
+    #stream { flex:1; overflow:auto; padding:16px; display:flex; flex-direction:column; gap:10px; }
+    .row { display:flex; }
+    .row.user { justify-content:flex-end; }
+    .bubble { max-width:72ch; padding:10px 12px; border-radius:14px; white-space:pre-wrap; }
+    .row.user .bubble { background:#0ea5e9; color:#fff; border-bottom-right-radius:4px; }
+    .row.bot  .bubble { background:#111827; border:1px solid #25324b; border-bottom-left-radius:4px; }
+    .composer { display:flex; gap:8px; padding:12px; border-top:1px solid #1f2937; background:var(--panel); }
+    textarea { flex:1; resize:none; min-height:44px; max-height:40vh; padding:10px; border-radius:10px; border:1px solid #263041; background:#0b1325; color:var(--ink); }
+    button { border:0; border-radius:10px; padding:10px 14px; background:var(--ok); color:#04210b; font-weight:700; cursor:pointer; }
+    .muted { color:var(--muted); }
+    dialog { border:1px solid #243046; background:#0b1325; color:var(--ink); border-radius:12px; padding:16px; max-width:520px; }
+    .field { display:grid; gap:6px; margin:10px 0; }
+    .field > label { font-size:.85rem; color:var(--muted); }
+    .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
+    .gear { background:var(--warn); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">Chat con TOT · FedEx</div>
+    <div id="sessionChip" class="chip" title="">Sesión: —</div>
+    <button id="cfgBtn" class="gear" title="Configurar">⚙︎</button>
+  </header>
+
+  <main>
+    <div id="stream" class="stream" aria-live="polite" aria-busy="false"></div>
+    <div class="composer">
+      <textarea id="input" placeholder="Escribe tu mensaje… (Enter para enviar, Shift+Enter para salto de línea)"></textarea>
+      <button id="sendBtn">Enviar ▶</button>
+    </div>
+  </main>
+
+  <dialog id="cfgDlg">
+    <h3 style="margin:0 0 8px 0;">Configurar webhook</h3>
+    <div class="field">
+      <label>URL base (opcional)</label>
+      <input id="baseUrl" placeholder="https://metatron.aircraftcare.net" style="padding:8px;border-radius:8px;border:1px solid #243046;background:#0b1325;color:#e5eefc" />
+    </div>
+    <div class="field">
+      <label>Path o ID</label>
+      <input id="path" placeholder="webhook/xxxx-xxxx" style="padding:8px;border-radius:8px;border:1px solid #243046;background:#0b1325;color:#e5eefc" />
+    </div>
+    <div class="field">
+      <label>Headers opcionales (JSON)</label>
+      <input id="headers" placeholder='{"Authorization":"Bearer ..."}' style="padding:8px;border-radius:8px;border:1px solid #243046;background:#0b1325;color:#e5eefc" />
+    </div>
+    <div class="actions">
+      <button id="newSessBtn" style="background:#64748b">Nueva sesión</button>
+      <button id="saveCfgBtn">Guardar</button>
+      <button id="closeCfgBtn" style="background:#ef4444">Cerrar</button>
+    </div>
+  </dialog>
+
+  <script>
+  (function () {
+    "use strict";
+
+    // ===== Config por agente =====
+    const DEFAULT_WEBHOOK = "https://metatron.aircraftcare.net/webhook/bf4dd093-bb02-472c-9454-7ab9af97bd1d";
+    const AGENT_PREFIX = "tot:";
+
+    // ===== Utilidades UI =====
+    const $ = (sel) => document.querySelector(sel);
+    const stream = $("#stream");
+    const input = $("#input");
+    const sendBtn = $("#sendBtn");
+    const chip = $("#sessionChip");
+    const cfgBtn = $("#cfgBtn");
+    const dlg = $("#cfgDlg");
+    const baseUrlEl = $("#baseUrl");
+    const pathEl = $("#path");
+    const headersEl = $("#headers");
+    const saveCfgBtn = $("#saveCfgBtn");
+    const closeCfgBtn = $("#closeCfgBtn");
+    const newSessBtn = $("#newSessBtn");
+
+    function push(role, text) {
+      const row = document.createElement("div");
+      row.className = "row " + role;
+      const b = document.createElement("div");
+      b.className = "bubble";
+      b.textContent = String(text ?? "");
+      row.appendChild(b);
+      stream.appendChild(row);
+      stream.scrollTop = stream.scrollHeight;
+      return row;
+    }
+
+    function setTyping(on) { stream.setAttribute("aria-busy", on ? "true" : "false"); }
+
+    // ===== Storage =====
+    const K = { base: "tot.baseUrl", path: "tot.path", headers: "tot.headers", sid: "tot.sid" };
+
+    function uuid() {
+      return ([1e7]+-1e3+-4e3+-8e3+-1e11)
+        .replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c/4).toString(16));
+    }
+
+    function getSession() {
+      let id = localStorage.getItem(K.sid);
+      if (!id) { id = uuid(); localStorage.setItem(K.sid, id); }
+      return id;
+    }
+
+    function updateChip() {
+      const sid = AGENT_PREFIX + getSession();
+      chip.textContent = "Sesión: " + sid.slice(0, 8);
+      chip.title = sid;
+    }
+
+    function safeParse(jsonText) {
+      try { return jsonText ? JSON.parse(jsonText) : {}; } catch { return {}; }
+    }
+
+    function getConfig() {
+      const base = localStorage.getItem(K.base) || "";
+      const p = localStorage.getItem(K.path) || "";
+      const hdrs = safeParse(localStorage.getItem(K.headers));
+      if (!base && !p) return { base: "", path: DEFAULT_WEBHOOK, headers: hdrs };
+      return { base, path: p, headers: hdrs };
+    }
+
+    function setConfig(o) {
+      if ("baseUrl" in o) localStorage.setItem(K.base, o.baseUrl || "");
+      if ("path" in o) localStorage.setItem(K.path, o.path || "");
+      if ("headers" in o) localStorage.setItem(K.headers, JSON.stringify(o.headers || {}));
+    }
+
+    // ===== Llamada al agente =====
+    async function callAgent(message) {
+      const cfg = getConfig();
+      let url = (cfg.base || "").trim();
+      if (url && cfg.path) url = url.replace(/\/+$/, "") + "/" + String(cfg.path).replace(/^\/+/, "");
+      if (!url) url = cfg.path || DEFAULT_WEBHOOK;
+      if (!/^https?:\/\//i.test(url)) throw new Error("La URL del webhook debe empezar con http(s)://");
+
+      const sessionId = AGENT_PREFIX + getSession();
+      const payload = { chatInput: message, sessionId };
+
+      const res = await fetch(url, {
+        method: "POST",
+        mode: "cors",
+        credentials: "omit",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload),
+        cache: "no-store"
+      });
+      const text = await res.text();
+      if (!res.ok) throw new Error("HTTP " + res.status + ": " + text);
+      try {
+        const j = JSON.parse(text);
+        return j.response ?? j.text ?? j.answer ?? j.message ?? text;
+      } catch {
+        return text;
+      }
+    }
+
+    // ===== Eventos =====
+    cfgBtn.addEventListener("click", () => {
+      const cfg = getConfig();
+      baseUrlEl.value = cfg.base;
+      pathEl.value = cfg.path;
+      headersEl.value = JSON.stringify(cfg.headers || {});
+      dlg.showModal();
+    });
+
+    saveCfgBtn.addEventListener("click", () => {
+      let headers = {};
+      try { headers = headersEl.value ? JSON.parse(headersEl.value) : {}; } catch { headers = {}; }
+      setConfig({ baseUrl: baseUrlEl.value, path: pathEl.value, headers });
+      dlg.close();
+    });
+
+    closeCfgBtn.addEventListener("click", () => dlg.close());
+
+    newSessBtn.addEventListener("click", () => {
+      localStorage.removeItem(K.sid);
+      updateChip();
+    });
+
+    sendBtn.addEventListener("click", async () => {
+      const msg = input.value.trim();
+      if (!msg) return;
+      input.value = "";
+      push("user", msg);
+      setTyping(true);
+      try {
+        const ans = await callAgent(msg);
+        push("bot", ans || "— (sin contenido)");
+      } catch (err) {
+        const msgErr = (err && err.message) ? err.message : String(err);
+        push("bot", "⚠️ " + msgErr);
+      } finally {
+        setTyping(false);
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendBtn.click();
+      }
+    });
+
+    // ===== Boot =====
+    updateChip();
+
+    // Auto-scroll (observer inline)
+    const mo = new MutationObserver(() => { stream.scrollTop = stream.scrollHeight; });
+    mo.observe(stream, { childList: true, subtree: false });
+    window.addEventListener("resize", () => { stream.scrollTop = stream.scrollHeight; });
+  })();
+  </script>
+</body>
+</html>
